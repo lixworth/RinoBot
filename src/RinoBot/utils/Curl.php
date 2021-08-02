@@ -7,18 +7,21 @@ namespace RinoBot\utils;
  * Class Curl
  * @package RinoBot\utils
  */
-class Curl {
+class Curl
+{
     /**
      * 发起get请求
      * @param string $url
+     * @return bool|string
      */
-    public static function get (string $url) {
+    public static function get(string $url)
+    {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HEADER, 1);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);//跳过SS验证
-        $data = curl_exec($curl);  
+        $data = curl_exec($curl);
         curl_close($curl);
 
         return $data;
@@ -27,9 +30,11 @@ class Curl {
     /**
      * 发起post请求
      * @param string $url
-     * @param array $data
+     * @param array $PostData
+     * @return bool|string
      */
-    public static function post (string $url,array $PostData) {
+    public static function post(string $url, array $PostData)
+    {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HEADER, 1);
@@ -39,7 +44,8 @@ class Curl {
         curl_setopt($curl, CURLOPT_POSTFIELDS, $PostData);
         $data = curl_exec($curl);
         curl_close($curl);
-        
+
         return $data;
     }
+
 }

@@ -21,4 +21,4 @@ if(!file_exists(CONFIG_DIR."rino-bot.yaml")){
 
 }
 // 实例化 RinoBot
-$app = new \RinoBot\RinoBot();
+$app = new \RinoBot\RinoBot(CONFIG_DIR,PLUGIN_DIE,RUNTIME_DIE);

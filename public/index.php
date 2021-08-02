@@ -6,6 +6,8 @@
 
 declare(strict_types=1);
 
+define("START_TIME", microtime());
+
 // 定义全局变量
 const PUBLIC_DIR = __DIR__ . "/";
 const SOURCE_DIR = __DIR__ . "/../src/";

@@ -15,6 +15,7 @@ namespace RinoBot\utils;
 /**
  * Class Config
  * @package RinoBot\utils
+ * 配置管理 yaml
  */
 class Config
 {

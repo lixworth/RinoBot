@@ -14,17 +14,38 @@ namespace RinoBot;
 
 class RinoBot {
 
+    public static RinoBot $rinoBot;
+
+    public string $config_dir;
+    public string $plugin_dir;
+    public string $runtime_dir;
+
+    public $config;
+
     /**
      * RinoBot 构造函数.
      */
-    public function __construct()
+    public function __construct($config_dir,$plugin_dir,$runtime_dir)
     {
+        self::$rinoBot = $this;
+
         //todo error page
-        if($this->check_php_ext(3) !== true){
+        if($this->check_php_ext(1) !== true){
             foreach ($this->check_php_ext(3) as $item){
                 echo $item."<br>";
             }
             exit();
+        }
+
+        $this->config_dir = $config_dir;
+        $this->plugin_dir = $plugin_dir;
+        $this->runtime_dir = $runtime_dir;
+
+        if(!is_writable($config_dir) || !is_writable($plugin_dir) || !is_writable($runtime_dir)){
+            exit("目录不可写 请给权限blblbl");
+        }
+        if(!file_exists($config_dir."/rino-bot.yaml")){
+            //todo
         }
     }
 
@@ -56,5 +77,13 @@ class RinoBot {
 //            $error[] = "请安装 YAML 扩展";
 //        }
         return (count($error) == 0)? true : $error;
+    }
+
+    /**
+     * @return RinoBot
+     */
+    public static function getRinoBot(): RinoBot
+    {
+        return self::$rinoBot;
     }
 }

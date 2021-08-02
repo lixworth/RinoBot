@@ -1,0 +1,5 @@
+name: ExamplePlugin
+main: ExamplePlugin
+author: lixworth
+website: https://github.com/lixworth/RinoBot
+version: 1.0.0

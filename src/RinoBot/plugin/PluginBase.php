@@ -12,5 +12,8 @@ declare(strict_types=1);
 
 abstract class PluginBase
 {
-
+    public function getPluginForer()
+    {
+        
+    }
 }

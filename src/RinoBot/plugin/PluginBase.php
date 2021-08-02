@@ -1,22 +1,16 @@
 <?php
 /**
- * Config.php
+ * PluginBase.php
  *
  * @project RinoBot
  * @author lixworth <lixworth@outlook.com>
  * @copyright RinoBot
- * @create 2021/8/2 15:43
+ * @create 2021/8/2 18:43
  */
 
 declare(strict_types=1);
 
-namespace RinoBot\utils;
-
-/**
- * Class Config
- * @package RinoBot\utils
- */
-class Config
+abstract class PluginBase
 {
 
 }

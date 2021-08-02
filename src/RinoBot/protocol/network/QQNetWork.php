@@ -1,22 +1,18 @@
 <?php
 /**
- * Config.php
+ * QQNetWork.php
  *
  * @project RinoBot
  * @author lixworth <lixworth@outlook.com>
  * @copyright RinoBot
- * @create 2021/8/2 15:43
+ * @create 2021/8/2 18:53
  */
 
 declare(strict_types=1);
 
-namespace RinoBot\utils;
+namespace RinoBot\protocol\network;
 
-/**
- * Class Config
- * @package RinoBot\utils
- */
-class Config
+
+class QQNetWork extends NetWork
 {
-
 }

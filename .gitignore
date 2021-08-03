@@ -3,3 +3,5 @@
 runtime/*./log
 /vendor/
 /tools/build/*
+runtime/
+config/

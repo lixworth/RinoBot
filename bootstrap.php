@@ -14,11 +14,12 @@ if(file_exists(__DIR__."/vendor/autoload.php")){
     require_once __DIR__ . "/vendor/autoload.php";
 }else {
     // 自动加载
-    spl_autoload_register(function ($class) {
-        if (file_exists(SOURCE_DIR . $class . ".php")) {
-            include_once SOURCE_DIR . $class . ".php";
-        }
-    });
+//    spl_autoload_register(function ($class) {
+//        if (file_exists(SOURCE_DIR . $class . ".php")) {
+//            include_once SOURCE_DIR . $class . ".php";
+//        }
+//    });
+    exit("您的安装包不完整 请重新下载 https://github.com/lixworth/RinoBot/releases ");
 }
 
 // 实例化 RinoBot

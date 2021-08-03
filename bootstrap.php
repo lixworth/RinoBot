@@ -10,15 +10,16 @@
 
 declare(strict_types=1);
 
-// 自动加载
-spl_autoload_register(function($class){
-    if(file_exists(SOURCE_DIR.$class.".php")){
-        include_once SOURCE_DIR.$class.".php";
-    }
-});
-
-if(!file_exists(CONFIG_DIR."rino-bot.yaml")){
-
+if(file_exists(__DIR__."/vendor/autoload.php")){
+    require_once __DIR__ . "/vendor/autoload.php";
+}else {
+    // 自动加载
+    spl_autoload_register(function ($class) {
+        if (file_exists(SOURCE_DIR . $class . ".php")) {
+            include_once SOURCE_DIR . $class . ".php";
+        }
+    });
 }
+
 // 实例化 RinoBot
 $app = new \RinoBot\RinoBot(CONFIG_DIR,PLUGIN_DIE,RUNTIME_DIE);

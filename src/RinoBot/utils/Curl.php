@@ -163,4 +163,24 @@ class Curl
             curl_close($ch);
         }
     }
+
+    /**
+     * @param $data
+     * @return string
+     */
+    public static function paramsToUrl($data): string
+    {
+        $first = true;
+        $url = "";
+        foreach ($data as $item){
+            if($first){
+                $url = $url."?".$item["param"]."=".$item["data"];
+                $first = false;
+            }else{
+                $url = $url."&".$item["param"]."=".$item["data"];
+            }
+        }
+        unset($first);
+        return $url;
+    }
 }

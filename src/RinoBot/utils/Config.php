@@ -94,5 +94,6 @@ class Config
                 return self::checkArrayStructure($array[$key],$item);
             }
         }
+        return false;
     }
 }

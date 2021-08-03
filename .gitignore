@@ -2,3 +2,4 @@
 .vscode/
 runtime/*./log
 /vendor/
+/tools/build/*

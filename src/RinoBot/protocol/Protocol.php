@@ -22,7 +22,7 @@ use RinoBot\protocol\network\NetWork;
  */
 interface Protocol
 {
-    public function __construct();
+    public function __construct($data);
 
     public function connect(): void;
 

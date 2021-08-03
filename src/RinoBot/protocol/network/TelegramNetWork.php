@@ -27,19 +27,19 @@ class TelegramNetWork extends NetWork
         bool $AllowSendingWithoutReply = true)
     {
         if (empty($ReplyToMessageId)) {
-            return Curl::get($this->api . $Token .
-                "/sendMessage?chat_id=" . $ChatID .
-                "&text=" . $Text .
-                "&disable_web_page_preview=" . $DisableWebPagePreview .
-                "&disable_notification=" . $DisableNotification . "");
+            return Curl::get($this->api.$Token.
+                "/sendMessage?chat_id=".$ChatID.
+                "&text=".$Text.
+                "&disable_web_page_preview=".$DisableWebPagePreview.
+                "&disable_notification=".$DisableNotification."");
         } else {
-            return Curl::get($this->api . $Token .
-                "/sendMessage?chat_id=" . $ChatID .
-                "&text=" . $Text .
-                "&reply_to_message_id=" . $ReplyToMessageId .
-                "&disable_web_page_preview=" . $DisableWebPagePreview .
-                "&disable_notification=" . $DisableNotification .
-                "&allow_sending_without_reply=" . $AllowSendingWithoutReply);
+            return Curl::get($this->api.$Token.
+                "/sendMessage?chat_id=".$ChatID.
+                "&text=".$Text.
+                "&reply_to_message_id=".$ReplyToMessageId.
+                "&disable_web_page_preview=".$DisableWebPagePreview.
+                "&disable_notification=".$DisableNotification.
+                "&allow_sending_without_reply=".$AllowSendingWithoutReply);
         }
     }
 
@@ -55,10 +55,10 @@ class TelegramNetWork extends NetWork
         string $Token, string $ChatID, string $FromChatId, string $MessageId,
         bool $DisableNotification = false)
     {
-        Curl::get($this->api . $Token .
-            "/forwardMessage?chat_id=" . $ChatID .
-            "&from_chat_id=" . $FromChatId .
-            "&message_id=" . $MessageId .
-            "&disable_notification=" . $DisableNotification);
+        Curl::get($this->api.$Token.
+            "/forwardMessage?chat_id=".$ChatID.
+            "&from_chat_id=".$FromChatId.
+            "&message_id=".$MessageId.
+            "&disable_notification=".$DisableNotification);
     }
 }

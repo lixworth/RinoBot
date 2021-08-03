@@ -87,7 +87,8 @@ class RinoBot {
         return self::$rinoBot;
     }
 
-    public function registerPlugins()
+
+    public function registerPlugin()
     {
 
     }

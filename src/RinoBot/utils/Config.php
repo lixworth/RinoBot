@@ -48,16 +48,13 @@ class Config
      * @param array $config
      * @return bool
      */
-    public static function generateFile(string $file,array $config): bool
+    public static function generateFile(string $file,array $config)
     {
         if(file_exists($file)){
-            if(!is_writable($file)){
-                return false;
-            }
+            return false;
+        }else{
             file_put_contents($file,Yaml::dump($config));
             return true;
-        }else{
-            return false;
         }
     }
 
@@ -88,10 +85,10 @@ class Config
     private static function checkArrayStructure($array,$structure): bool
     {
         foreach ($structure as $key => $item){
-            if(!is_array($item)){
-                return in_array($item, $array);
-            }else{
+            if(is_array($item)){
                 return self::checkArrayStructure($array[$key],$item);
+            }else{
+                return in_array($item, $array);
             }
         }
         return false;

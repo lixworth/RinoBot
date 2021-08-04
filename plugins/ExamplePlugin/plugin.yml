@@ -1,5 +1,6 @@
 name: ExamplePlugin
 main: ExamplePlugin
+api-version: 1.0
+version: 1.0.0
 author: lixworth
 website: https://github.com/lixworth/RinoBot
-version: 1.0.0

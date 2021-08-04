@@ -19,7 +19,8 @@ use RinoBot\utils\Config;
  * Class RinoBot
  * @package RinoBot
  */
-class RinoBot {
+class RinoBot
+{
 
     public static RinoBot $rinoBot;
 
@@ -31,7 +32,7 @@ class RinoBot {
 
     public $redis;
 
-    public function __construct($config_dir,$plugin_dir,$runtime_dir)
+    public function __construct($config_dir, $plugin_dir, $runtime_dir)
     {
         self::$rinoBot = $this;
 
@@ -48,14 +49,14 @@ class RinoBot {
         if ($this->check_php_ext(2)) {
             try {
                 $redis = new \Redis();
-                $redis->connect('127.0.0.1',6379);
-                if($redis->isConnected()){
+                $redis->connect('127.0.0.1', 6379);
+                if ($redis->isConnected()) {
                     $this->redis = $redis;
                 }
-            }catch (\Exception $exception){
+            } catch (\Exception $exception) {
 
             }
-        }else{
+        } else {
             $predis = new Client([
                 'scheme' => 'tcp',
                 'host' => '10.0.0.1',
@@ -71,22 +72,22 @@ class RinoBot {
         $this->runtime_dir = $runtime_dir;
 
         foreach ([$config_dir, $plugin_dir, $runtime_dir] as $item) {
-            if(!is_dir($item)){
-                if(!mkdir($item)){
+            if (!is_dir($item)) {
+                if (!mkdir($item)) {
                     exit("$item 目录创建失败 请检查权限");
                 }
             }
-            if(!is_writable($item)){
+            if (!is_writable($item)) {
                 exit("$item 目录不可写 请给目录 775 权限");
             }
         }
 
-        if($this->config = Config::parseFile($config_dir . "rino-bot.yaml")){
-            if(!Config::checkConfigStructure($config_dir . "rino-bot.yaml",["debug","bots" => []])){
+        if ($this->config = Config::parseFile($config_dir . "rino-bot.yaml")) {
+            if (!Config::checkConfigStructure($config_dir . "rino-bot.yaml", ["debug", "bots" => []])) {
                 exit("rino-bot.yaml 配置文件错误 请对比实例或请删除再次运行程序重新生成");
             }
-        }else{
-            if(!Config::generateFile($config_dir . "rino-bot.yaml",[
+        } else {
+            if (!Config::generateFile($config_dir . "rino-bot.yaml", [
                 "debug" => true,
                 "bots" => [
                     [
@@ -95,14 +96,14 @@ class RinoBot {
                         "bot_key" => "233"
                     ]
                 ] //todo bot structure
-            ])){
+            ])) {
                 exit("rino-bot.yaml 生成错误 原因: 未知");
             }
         }
         $plugins = array();
         if ($pd = opendir($plugin_dir)) {
             while (($file = readdir($pd)) !== false) {
-                if($file == "." || $file == ".."){
+                if ($file == "." || $file == "..") {
                     continue;
                 }
                 if (is_dir($plugin_dir . $file)) {
@@ -111,7 +112,7 @@ class RinoBot {
             }
             closedir($pd);
         }
-        foreach ($plugins as $plugin){
+        foreach ($plugins as $plugin) {
             $this->registerPlugin($plugin);
         }
 
@@ -126,19 +127,19 @@ class RinoBot {
         //todo logger
     }
 
-    public function registerPlugin(string $plugin):void
+    public function registerPlugin(string $plugin): void
     {
-        if(is_dir($this->plugin_dir . $plugin ."/")){
-            if(Config::checkConfigStructure($this->plugin_dir . $plugin."/plugin.yml",[
-                "name","main","author","version","api-version"
-            ])){ //todo ...bug
-                if($config = Config::parseFile($this->plugin_dir . $plugin . "/plugin.yml")){
+        if (is_dir($this->plugin_dir . $plugin . "/")) {
+            if (Config::checkConfigStructure($this->plugin_dir . $plugin . "/plugin.yml", [
+                "name", "main", "author", "version", "api-version"
+            ])) { //todo ...bug
+                if ($config = Config::parseFile($this->plugin_dir . $plugin . "/plugin.yml")) {
                     print_r($config);
                 }
-            }else{
+            } else {
                 exit("插件 $plugin 加载失败：plugin.yml 结构不符合");
             }
-        }else{
+        } else {
             exit("插件 $plugin 加载失败：文件夹不存在");
         }
     }
@@ -148,7 +149,7 @@ class RinoBot {
      */
     public function getPredis(): Client
     {
-        if(!$this->redis->isConnected()){
+        if (!$this->redis->isConnected()) {
             $this->redis->connect();
         }
         return $this->redis;
@@ -165,23 +166,23 @@ class RinoBot {
     public function check_php_ext(int $level = 1)
     {
         $error = [];
-        if($level > 1){
-            if(!extension_loaded("curl")){
+        if ($level > 1) {
+            if (!extension_loaded("curl")) {
                 $error[] = "建议开启 curl 扩展，获取更多功能";
             }
-            if(!extension_loaded("redis")){
+            if (!extension_loaded("redis")) {
                 $error[] = "建议开启 redis 扩展，当前使用predis实现于redis的缓存链接，性能低下";
             }
         }
-        if($level > 2){
-            if(!extension_loaded("swoole")){
+        if ($level > 2) {
+            if (!extension_loaded("swoole")) {
                 $error[] = "您当前开启最高检测等级，请安装 swoole 扩展，体验更多内容（相关区别可查看: xxx ）";
             }
         }
 //        if(!extension_loaded("yaml")){
 //            $error[] = "请安装 YAML 扩展";
 //        }
-        return (count($error) == 0)? true : $error;
+        return (count($error) == 0) ? true : $error;
     }
 
     /**

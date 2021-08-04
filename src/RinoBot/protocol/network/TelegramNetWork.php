@@ -18,6 +18,7 @@ class TelegramNetWork extends NetWork
      * @param bool $DisableWebPagePreview (可选)禁用消息中的链接预览
      * @param bool $DisableNotification (可选)静默发送消息，用户将收到无声通知
      * @param bool $AllowSendingWithoutReply (可选)如果需要被回复的消息不存在是否发送
+     * @return bool|string
      */
     public function sendMessage(
         string $Token, string $ChatID, string $Text,
@@ -27,19 +28,19 @@ class TelegramNetWork extends NetWork
         bool $AllowSendingWithoutReply = true)
     {
         if (empty($ReplyToMessageId)) {
-            return Curl::get($this->api.$Token.
-                "/sendMessage?chat_id=".$ChatID.
-                "&text=".$Text.
-                "&disable_web_page_preview=".$DisableWebPagePreview.
-                "&disable_notification=".$DisableNotification."");
+            return Curl::get($this->api . $Token .
+                "/sendMessage?chat_id=" . $ChatID .
+                "&text=" . $Text .
+                "&disable_web_page_preview=" . $DisableWebPagePreview .
+                "&disable_notification=" . $DisableNotification . "");
         } else {
-            return Curl::get($this->api.$Token.
-                "/sendMessage?chat_id=".$ChatID.
-                "&text=".$Text.
-                "&reply_to_message_id=".$ReplyToMessageId.
-                "&disable_web_page_preview=".$DisableWebPagePreview.
-                "&disable_notification=".$DisableNotification.
-                "&allow_sending_without_reply=".$AllowSendingWithoutReply);
+            return Curl::get($this->api . $Token .
+                "/sendMessage?chat_id=" . $ChatID .
+                "&text=" . $Text .
+                "&reply_to_message_id=" . $ReplyToMessageId .
+                "&disable_web_page_preview=" . $DisableWebPagePreview .
+                "&disable_notification=" . $DisableNotification .
+                "&allow_sending_without_reply=" . $AllowSendingWithoutReply);
         }
     }
 
@@ -50,16 +51,17 @@ class TelegramNetWork extends NetWork
      * @param string $FromChatId 需要被转发的消息来源的聊天ID
      * @param string $MessageId 需要被转发的消息ID
      * @param bool $DisableNotification (可选)静默发送消息，用户将收到无声通知
+     * @return bool|string
      */
     public function forwardMessage(
         string $Token, string $ChatID, string $FromChatId, string $MessageId,
         bool $DisableNotification = false)
     {
-        return Curl::get($this->api.$Token.
-            "/forwardMessage?chat_id=".$ChatID.
-            "&from_chat_id=".$FromChatId.
-            "&message_id=".$MessageId.
-            "&disable_notification=".$DisableNotification);
+        return Curl::get($this->api . $Token .
+            "/forwardMessage?chat_id=" . $ChatID .
+            "&from_chat_id=" . $FromChatId .
+            "&message_id=" . $MessageId .
+            "&disable_notification=" . $DisableNotification);
     }
 
     /**
@@ -72,20 +74,23 @@ class TelegramNetWork extends NetWork
      * @param bool $DisableNotification (可选)静默发送消息，用户将收到无声通知
      * @param string|null $ReplyToMessageId (可选)回复消息ID，不是回复消息留空
      * @param bool $AllowSendingWithoutReply (可选)如果需要被回复的消息不存在是否发送
+     * @return bool|string
      */
-    public function copyMessage(string $Token, string $ChatID,string $FromChatId,string $MessageId,
-    string $Caption = NULL,
-    bool $DisableNotification = false,
-    string $ReplyToMessageId = NULL,
-    bool $AllowSendingWithoutReply = true) {
-        return Curl::get($this->api.$Token.
-            "/forwardMessage?chat_id=".$ChatID.
-            "&from_chat_id=".$FromChatId.
-            "&message_id=".$MessageId.
-            "&caption=".$Caption.
-            "&disable_notification=".$DisableNotification.
-            "&reply_to_message_id=".$ReplyToMessageId.
-            "&allow_sending_without_reply=".$AllowSendingWithoutReply);
+    public function copyMessage(
+        string $Token, string $ChatID, string $FromChatId, string $MessageId,
+        string $Caption = NULL,
+        bool $DisableNotification = false,
+        string $ReplyToMessageId = NULL,
+        bool $AllowSendingWithoutReply = true)
+    {
+        return Curl::get($this->api . $Token .
+            "/forwardMessage?chat_id=" . $ChatID .
+            "&from_chat_id=" . $FromChatId .
+            "&message_id=" . $MessageId .
+            "&caption=" . $Caption .
+            "&disable_notification=" . $DisableNotification .
+            "&reply_to_message_id=" . $ReplyToMessageId .
+            "&allow_sending_without_reply=" . $AllowSendingWithoutReply);
     }
 
     /**
@@ -93,13 +98,16 @@ class TelegramNetWork extends NetWork
      * @param string $Token
      * @param string $ChatID 目标聊天ID
      * @param string $Photo 图片URL
-     * @param string (可选)$Caption 图片的标题
+     * @param string|null $Caption 图片的标题(可选)
+     * @return bool|string
      */
-    public function sendPhoto(string $Token, string $ChatID,string $Photo,
-    string $Caption = NULL) {
-        return Curl::get($this->api.$Token.
-            "/forwardMessage?chat_id=".$ChatID.
-            "&photo=".$Photo.
-            "&caption=".$Caption);
+    public function sendPhoto(
+        string $Token, string $ChatID, string $Photo,
+        string $Caption = NULL)
+    {
+        return Curl::get($this->api . $Token .
+            "/forwardMessage?chat_id=" . $ChatID .
+            "&photo=" . $Photo .
+            "&caption=" . $Caption);
     }
 }

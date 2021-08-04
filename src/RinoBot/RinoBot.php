@@ -21,7 +21,6 @@ use RinoBot\utils\Config;
  */
 class RinoBot
 {
-
     public static RinoBot $rinoBot;
 
     public string $config_dir;
@@ -31,12 +30,21 @@ class RinoBot
     public $config;
 
     public $redis;
+    public array $plugins;
 
+    /**
+     * RinoBot constructor.
+     * @param $config_dir
+     * @param $plugin_dir
+     * @param $runtime_dir
+     */
     public function __construct($config_dir, $plugin_dir, $runtime_dir)
     {
         self::$rinoBot = $this;
 
         //todo error page
+
+        // 检测最低配置需求
         if ($this->check_php_ext(1) !== true) {
             foreach ($this->check_php_ext(3) as $item) {
                 echo $item . "<br>";
@@ -44,33 +52,36 @@ class RinoBot
             exit();
         }
 
-        $this->registerLogger();
+        $this->registerLogger(); // 注册日志系统
 
-        if ($this->check_php_ext(2)) {
-            try {
+        // 注册redis
+        try {
+            if ($this->check_php_ext(2)) {
+
                 $redis = new \Redis();
                 $redis->connect('127.0.0.1', 6379);
                 if ($redis->isConnected()) {
                     $this->redis = $redis;
                 }
-            } catch (\Exception $exception) {
 
+            } else {
+                $predis = new Client([
+                    'scheme' => 'tcp',
+                    'host' => '10.0.0.1',
+                    'port' => 6379,
+                ]);
+                if ($predis->isConnected()) {
+                    $this->redis = $predis;
+                }
             }
-        } else {
-            $predis = new Client([
-                'scheme' => 'tcp',
-                'host' => '10.0.0.1',
-                'port' => 6379,
-            ]);
-            if ($predis->isConnected()) {
-                $this->redis = $predis;
-            }
+        } catch (\Exception $exception) {
+
         }
-
         $this->config_dir = $config_dir;
         $this->plugin_dir = $plugin_dir;
         $this->runtime_dir = $runtime_dir;
 
+        // 校验目录
         foreach ([$config_dir, $plugin_dir, $runtime_dir] as $item) {
             if (!is_dir($item)) {
                 if (!mkdir($item)) {
@@ -82,6 +93,7 @@ class RinoBot
             }
         }
 
+        // 校验RinoBot运行配置
         if ($this->config = Config::parseFile($config_dir . "rino-bot.yaml")) {
             if (!Config::checkConfigStructure($config_dir . "rino-bot.yaml", ["debug", "bots" => []])) {
                 exit("rino-bot.yaml 配置文件错误 请对比实例或请删除再次运行程序重新生成");
@@ -100,6 +112,8 @@ class RinoBot
                 exit("rino-bot.yaml 生成错误 原因: 未知");
             }
         }
+
+        // 读取并注册插件
         $plugins = array();
         if ($pd = opendir($plugin_dir)) {
             while (($file = readdir($pd)) !== false) {
@@ -134,7 +148,14 @@ class RinoBot
                 "name", "main", "author", "version", "api-version"
             ])) { //todo ...bug
                 if ($config = Config::parseFile($this->plugin_dir . $plugin . "/plugin.yml")) {
-                    print_r($config);
+                    if(file_exists($this->plugin_dir . $plugin . "/".$config["main"].".php")){
+                        require_once $this->plugin_dir . $plugin . "/".$config["main"].".php";
+                        $this->plugins[$plugin] = new $config["main"];
+                    }else{
+                        exit("插件 $plugin 加载失败: 入口文件不存在");
+                    }
+                }else{
+                    exit("插件 $plugin 加载失败：plugin.yml 读取失败");
                 }
             } else {
                 exit("插件 $plugin 加载失败：plugin.yml 结构不符合");
@@ -147,7 +168,7 @@ class RinoBot
     /**
      * @return Client
      */
-    public function getPredis(): Client
+    public function getRedis()
     {
         if (!$this->redis->isConnected()) {
             $this->redis->connect();
@@ -192,4 +213,6 @@ class RinoBot
     {
         return self::$rinoBot;
     }
+
+
 }

@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace RinoBot;
 
+use ExamplePlugin\ExamplePluginMain;
 use Predis\Client;
 use RinoBot\utils\Config;
-
 /**
  * Class RinoBot
  * @package RinoBot
@@ -126,6 +126,15 @@ class RinoBot
             }
             closedir($pd);
         }
+        spl_autoload_register(function ($class) use ($plugins) {
+            $namespace = explode("\\", $class);
+            if (in_array($namespace[0], $plugins)) { // not work
+                if (file_exists(str_replace("\/","/",$this->plugin_dir . $class . ".php"))) {
+                    echo str_replace("\'\'","/",$this->plugin_dir . $class . ".php");
+                }
+            }
+
+        });
         foreach ($plugins as $plugin) {
             $this->registerPlugin($plugin);
         }
@@ -149,7 +158,7 @@ class RinoBot
             ])) { //todo ...bug
                 if ($config = Config::parseFile($this->plugin_dir . $plugin . "/plugin.yml")) {
                     if(file_exists($this->plugin_dir . $plugin . "/".$config["main"].".php")){
-                        require_once $this->plugin_dir . $plugin . "/".$config["main"].".php";
+//                        require_once $this->plugin_dir . $plugin . "/".$config["main"].".php";
                         $this->plugins[$plugin] = new $config["main"];
                     }else{
                         exit("插件 $plugin 加载失败: 入口文件不存在");

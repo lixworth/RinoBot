@@ -10,8 +10,19 @@
 
 declare(strict_types=1);
 
-class ExamplePlugin extends PluginBase
+namespace ExamplePlugin;
+
+use RinoBot\plugin\PluginBase;
+
+
+class ExamplePluginMain extends PluginBase
 {
+    public function onEnable()
+    {
+        fwrite(STDOUT, "第一个插件运行咯");
+    }
+
+
     /**
      * 注册指令
      * 这里指令相当于完整匹配关键词

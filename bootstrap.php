@@ -7,8 +7,9 @@
  * @copyright RinoBot
  * @create 2021/8/2 15:18
  */
-
 declare(strict_types=1);
+
+// RinoBot Bootstrap Script, Version 001
 
 if(file_exists(__DIR__."/vendor/autoload.php")){
     require_once __DIR__ . "/vendor/autoload.php";

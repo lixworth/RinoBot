@@ -82,15 +82,18 @@ class Config
         }
     }
 
-    private static function checkArrayStructure($array,$structure): bool
+    public static function checkArrayStructure($array,$structure): bool
     {
         foreach ($structure as $key => $item){
             if(is_array($item)){
                 return self::checkArrayStructure($array[$key],$item);
             }else{
-                return in_array($item, $array);
+                if(!in_array($item, array_keys($array))){
+                    echo $item."|";
+                    return false;
+                }
             }
         }
-        return false;
+        return true;
     }
 }

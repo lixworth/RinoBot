@@ -14,6 +14,7 @@ namespace RinoBot;
 
 use Composer\Autoload\ClassLoader;
 use RinoBot\utils\Config;
+
 /**
  * Class RinoBot
  * @package RinoBot
@@ -53,9 +54,14 @@ class RinoBot extends Singleton
 
         $this->registerLogger(); // 注册日志系统
 
+        if(is_array($msg=$this->check_php_ext(2))){
+            foreach($msg as $nmsl){
+                fwrite(STDOUT,$nmsl.PHP_EOL);
+            }
+        }
         // 注册redis
         try {
-            if ($this->check_php_ext(2)) {
+            if (class_exists('\Redis')) {
 
                 $redis = new \Redis();
                 $redis->connect('127.0.0.1', 6379);
@@ -76,6 +82,7 @@ class RinoBot extends Singleton
         } catch (\Exception $exception) {
 
         }
+
         $this->config_dir = $config_dir;
         $this->plugin_dir = $plugin_dir;
         $this->runtime_dir = $runtime_dir;
@@ -83,7 +90,7 @@ class RinoBot extends Singleton
         // 校验目录
         foreach ([$config_dir, $plugin_dir, $runtime_dir] as $item) {
             if (!is_dir($item)) {
-                if (!mkdir($item)) {
+                if (!@mkdir($item)) {
                     exit("$item 目录创建失败 请检查权限");
                 }
             }
@@ -155,20 +162,18 @@ class RinoBot extends Singleton
 
     public function registerPlugin(string $plugin): void
     {
-        if (is_dir($this->plugin_dir . $plugin . "/")) {
-            if (Config::checkConfigStructure($this->plugin_dir . $plugin . "/plugin.yml", [
-                "name", "main", "author", "version", "api-version"
-            ])) {
-                if ($config = Config::parseFile($this->plugin_dir . $plugin . "/plugin.yml")) {
-                    $this->plugins[$plugin] = new $config["main"];
-                } else {
-                    exit("插件 $plugin 加载失败：plugin.yml 读取失败");
-                }
-            } else {
-                exit("插件 $plugin 加载失败：plugin.yml 结构不符合");
-            }
-        } else {
+        if (!is_dir($this->plugin_dir . $plugin . "/")) {
             exit("插件 $plugin 加载失败：文件夹不存在");
+        }
+        if (!Config::checkConfigStructure($this->plugin_dir . $plugin . "/plugin.yml", [
+            "name", "main", "author", "version", "api-version"
+        ])) {
+            exit("插件 $plugin 加载失败：plugin.yml 结构不符合");
+        }
+        if ($config = Config::parseFile($this->plugin_dir . $plugin . "/plugin.yml")) {
+            $this->plugins[$plugin] = new $config["main"];
+        } else {
+            exit("插件 $plugin 加载失败：plugin.yml 读取失败");
         }
     }
 

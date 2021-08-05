@@ -1,18 +1,17 @@
 <template>
-  <div>
-    2333
-    <div class="alert alert-primary" role="alert">
-      A simple primary alert—check it out!
+    <div class="install-page">
+
+
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: "Install"
+    name: "Install"
 }
 </script>
 
 <style scoped>
-@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css";
+
 </style>

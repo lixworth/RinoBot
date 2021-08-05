@@ -18,9 +18,8 @@ use RinoBot\utils\Config;
  * Class RinoBot
  * @package RinoBot
  */
-class RinoBot
+class RinoBot extends Singleton
 {
-    public static RinoBot $rinoBot;
 
     public string $config_dir;
     public string $plugin_dir;
@@ -40,7 +39,7 @@ class RinoBot
      */
     public function __construct($config_dir, $plugin_dir, $runtime_dir)
     {
-        self::$rinoBot = $this;
+        parent::__construct();
         $this->loader = new ClassLoader(PUBLIC_DIR . "/../vendor/");
         //todo error page
 
@@ -210,14 +209,4 @@ class RinoBot
 //        }
         return (count($error) == 0) ? true : $error;
     }
-
-    /**
-     * @return RinoBot
-     */
-    public static function getRinoBot(): RinoBot
-    {
-        return self::$rinoBot;
-    }
-
-
 }

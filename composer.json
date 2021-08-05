@@ -9,7 +9,8 @@
     ],
     "require": {
         "symfony/yaml": "^5.3",
-        "predis/predis": "^1.1"
+        "predis/predis": "^1.1",
+      "ext-json": "*"
     },
     "autoload": {
         "psr-4": {

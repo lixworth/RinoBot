@@ -16,4 +16,4 @@ const RUNTIME_DIE = __DIR__ . "/../runtime/";
 const PLUGIN_DIE = __DIR__ . "/../plugins/";
 
 // 引入引导程序
-require_once PUBLIC_DIR."/../bootstrap.php";
+require_once PUBLIC_DIR . "/../bootstrap.php";

@@ -172,12 +172,12 @@ class Curl
     {
         $first = true;
         $url = "";
-        foreach ($data as $item){
-            if($first){
-                $url = $url."?".$item["param"]."=".$item["data"];
+        foreach ($data as $item) {
+            if ($first) {
+                $url = $url . "?" . $item["param"] . "=" . $item["data"];
                 $first = false;
-            }else{
-                $url = $url."&".$item["param"]."=".$item["data"];
+            } else {
+                $url = $url . "&" . $item["param"] . "=" . $item["data"];
             }
         }
         unset($first);

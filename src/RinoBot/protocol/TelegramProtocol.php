@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace RinoBot\protocol;
 
 use RinoBot\protocol\network\NetWork;

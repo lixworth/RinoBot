@@ -17,8 +17,9 @@ class Singleton
     /** @var self|null */
     private static ?self $instance = null;
 
-    public function __construct(){
-        self::$instance=$this;
+    public function __construct()
+    {
+        self::$instance = $this;
     }
 
     private static function make(): self

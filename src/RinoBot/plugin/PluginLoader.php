@@ -34,7 +34,8 @@ class PluginLoader extends Singleton
         return $this->plugins[$plugin] ?? null;
     }
 
-    public function getPlugins():array{
+    public function getPlugins(): array
+    {
         return $this->plugins;
     }
 

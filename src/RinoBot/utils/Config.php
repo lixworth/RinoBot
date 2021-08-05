@@ -31,13 +31,13 @@ class Config
      */
     public static function parseFile($file)
     {
-        if(file_exists($file)){
+        if (file_exists($file)) {
             $data = Yaml::parseFile($file);
-            if(!is_array($data)){
+            if (!is_array($data)) {
                 return false;
             }
-            return (array) $data;
-        }else{
+            return (array)$data;
+        } else {
             return false;
         }
     }
@@ -48,12 +48,12 @@ class Config
      * @param array $config
      * @return bool
      */
-    public static function generateFile(string $file,array $config)
+    public static function generateFile(string $file, array $config)
     {
-        if(file_exists($file)){
+        if (file_exists($file)) {
             return false;
-        }else{
-            file_put_contents($file,Yaml::dump($config));
+        } else {
+            file_put_contents($file, Yaml::dump($config));
             return true;
         }
     }
@@ -73,23 +73,23 @@ class Config
      *  PHP Check:
      *      Config::checkConfigStructure(Yaml File,["name","database" => ["enable","content"] ])
      */
-    public static function checkConfigStructure($file,$config_structure): bool
+    public static function checkConfigStructure($file, $config_structure): bool
     {
-        if($config = self::parseFile($file)){
-            return self::checkArrayStructure($config,$config_structure);
-        }else{
+        if ($config = self::parseFile($file)) {
+            return self::checkArrayStructure($config, $config_structure);
+        } else {
             return false;
         }
     }
 
-    public static function checkArrayStructure($array,$structure): bool
+    public static function checkArrayStructure($array, $structure): bool
     {
-        foreach ($structure as $key => $item){
-            if(is_array($item)){
-                return self::checkArrayStructure($array[$key],$item);
-            }else{
-                if(!in_array($item, array_keys($array))){
-                    echo $item."|";
+        foreach ($structure as $key => $item) {
+            if (is_array($item)) {
+                return self::checkArrayStructure($array[$key], $item);
+            } else {
+                if (!in_array($item, array_keys($array))) {
+                    echo $item . "|";
                     return false;
                 }
             }

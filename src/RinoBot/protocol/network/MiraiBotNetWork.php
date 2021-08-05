@@ -24,6 +24,7 @@ class MiraiBotNetWork
         $this->api = $api;
     }
     ////////////////////////////////////// Session Part Start //////////////////////////////////////
+
     /**
      * 使用此方法验证你的身份，并返回一个会话
      * @param string $verifyKey
@@ -31,9 +32,9 @@ class MiraiBotNetWork
      */
     public function requestVerify(string $verifyKey)
     {
-        $request = Curl::send_post($this->api."/verify",json_encode([
+        $request = Curl::send_post($this->api . "/verify", json_encode([
             "verifyKey" => $verifyKey
-        ]),10,[
+        ]), 10, [
             "Content-Type: application/json"
         ]);
         return json_decode((string)$request);
@@ -45,12 +46,12 @@ class MiraiBotNetWork
      * @param int $qq
      * @return mixed
      */
-    public function requestBind(string $session,int $qq)
+    public function requestBind(string $session, int $qq)
     {
-        $request = Curl::send_post($this->api."/bind",json_encode([
+        $request = Curl::send_post($this->api . "/bind", json_encode([
             "sessionKey" => $session,
             "qq" => $qq,
-        ]),10,[
+        ]), 10, [
             "Content-Type: application/json"
         ]);
         return json_decode((string)$request);
@@ -62,12 +63,12 @@ class MiraiBotNetWork
      * @param int $qq
      * @return mixed
      */
-    public function requestRelease(string $session,int $qq)
+    public function requestRelease(string $session, int $qq)
     {
-        $request = Curl::send_post($this->api."/release",json_encode([
+        $request = Curl::send_post($this->api . "/release", json_encode([
             "sessionKey" => $session,
             "qq" => $qq,
-        ]),10,[
+        ]), 10, [
             "Content-Type: application/json"
         ]);
         return json_decode((string)$request);

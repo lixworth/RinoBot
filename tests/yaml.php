@@ -15,7 +15,7 @@ include_once __DIR__ . "/../vendor/autoload.php";
 try {
     $val = \Symfony\Component\Yaml\Yaml::parse("demots  ::''SDXSXSXS\CD788-908809808***********(rue");
 
-}catch (\Symfony\Component\Yaml\Exception\ParseException $exception){
+} catch (\Symfony\Component\Yaml\Exception\ParseException $exception) {
     exit($exception->getMessage());
 }
 print_r($val);

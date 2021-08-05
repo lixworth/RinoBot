@@ -13,7 +13,9 @@ declare(strict_types=1);
 namespace RinoBot;
 
 use Composer\Autoload\ClassLoader;
+use RinoBot\plugin\PluginLoader;
 use RinoBot\utils\Config;
+use RinoBot\utils\Logger;
 
 /**
  * Class RinoBot
@@ -29,8 +31,9 @@ class RinoBot extends Singleton
     public $config;
 
     public $redis;
-    public array $plugins;
     public ClassLoader $loader;
+    private PluginLoader $pluginLoader;
+    private Logger $logger;
 
     /**
      * RinoBot constructor.
@@ -52,11 +55,11 @@ class RinoBot extends Singleton
             exit();
         }
 
-        $this->registerLogger(); // 注册日志系统
+        $this->logger = new Logger();
 
-        if(is_array($msg=$this->check_php_ext(2))){
-            foreach($msg as $nmsl){
-                fwrite(STDOUT,$nmsl.PHP_EOL);
+        if (is_array($msg = $this->check_php_ext(2))) {
+            foreach ($msg as $nmsl) {
+                $this->logger->error($nmsl);
             }
         }
         // 注册redis
@@ -119,62 +122,17 @@ class RinoBot extends Singleton
             }
         }
 
-        // 读取并注册插件
-        $load_plugins = array();
-        if ($pd = opendir($plugin_dir)) {
-            while (($file = readdir($pd)) !== false) {
-                if ($file == "." || $file == "..") {
-                    continue;
-                }
-                if (is_dir($plugin_dir . $file)) {
-                    $load_plugins[] = $file;
-                }
-            }
-            closedir($pd);
-        }
+        $this->pluginLoader = new PluginLoader($this->loader);
+        $this->pluginLoader->loadPlugins($plugin_dir); // 插件自动加载
 
-        // 检测插件基础结构
-        foreach ($load_plugins as $key => $plugin) {
-            if (file_exists($this->plugin_dir . $plugin . "/plugin.yml")) {
-                $this->loader->addPsr4("", $this->plugin_dir . $plugin . "/src");
-            } else {
-                unset($load_plugins[$key]);
-            }
-        }
-        $this->loader->register(); // 插件自动加载
 
-        // 实例化插件
-        foreach ($load_plugins as $plugin) {
-            $this->registerPlugin($plugin);
-        }
+        $this->loader->register();//composer init
 
-        print_r($this->plugins);
+
+        print_r($this->pluginLoader->getPlugins());
         unset($config_dir);
         unset($plugin_dir);
         unset($runtime_dir);
-    }
-
-
-    public function registerLogger()
-    {
-        //todo logger
-    }
-
-    public function registerPlugin(string $plugin): void
-    {
-        if (!is_dir($this->plugin_dir . $plugin . "/")) {
-            exit("插件 $plugin 加载失败：文件夹不存在");
-        }
-        if (!Config::checkConfigStructure($this->plugin_dir . $plugin . "/plugin.yml", [
-            "name", "main", "author", "version", "api-version"
-        ])) {
-            exit("插件 $plugin 加载失败：plugin.yml 结构不符合");
-        }
-        if ($config = Config::parseFile($this->plugin_dir . $plugin . "/plugin.yml")) {
-            $this->plugins[$plugin] = new $config["main"];
-        } else {
-            exit("插件 $plugin 加载失败：plugin.yml 读取失败");
-        }
     }
 
     public function getRedis()
@@ -183,6 +141,11 @@ class RinoBot extends Singleton
             $this->redis->connect();
         }
         return $this->redis;
+    }
+
+    public function getLogger(): Logger
+    {
+        return $this->logger;
     }
 
     /**

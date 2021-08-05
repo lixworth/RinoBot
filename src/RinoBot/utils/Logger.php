@@ -12,23 +12,21 @@ declare(strict_types=1);
 
 namespace RinoBot\utils;
 
+use RinoBot\Singleton;
+
 /**
  * Class Logger
  * @package RinoBot\utils
  * 日志模板
  */
-class Logger
+class Logger extends Singleton
 {
     private $format = "";
 
-    public function __construct()
-    {
 
-    }
-
-    public static function template($from, $type, $message):string
+    public static function template($from, $type, $message): string
     {
-        return "[".date("Y/H/D h:m:s")."][".$type."][".$from."] ".$message."\n";
+        return "[" . date("Y/H/D h:m:s") . "][" . $type . "][" . $from . "] " . $message . "\n";
     }
 
     /**
@@ -36,9 +34,9 @@ class Logger
      * @param string $from
      * @return string
      */
-    public function info($message, string $from = 'Server'): string
+    public function info($message, string $from = 'Server'): void
     {
-        return self::template($from,"INFO",$message);
+        fwrite(STDOUT, self::template($from, "INFO", $message));
     }
 
     /**
@@ -46,9 +44,9 @@ class Logger
      * @param string $from
      * @return string
      */
-    public function success($message, string $from = 'Server'): string
+    public function success($message, string $from = 'Server'): void
     {
-        return self::template($from,"SUCCESS",$message);
+        fwrite(STDOUT, self::template($from, "SUCCESS", $message));
     }
 
     /**
@@ -56,8 +54,8 @@ class Logger
      * @param string $from
      * @return string
      */
-    public function error($message, string $from = 'Server'): string
+    public function error($message, string $from = 'Server'): void
     {
-        return self::template($from,"ERROR",$message);
+        fwrite(STDOUT, self::template($from, "ERROR", $message));
     }
 }

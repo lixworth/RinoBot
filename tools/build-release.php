@@ -10,6 +10,9 @@
 
 declare(strict_types=1);
 
+if(PHP_OS !== "Linux"){
+    exit("请使用 linux 系统执行");
+}
 $target = __DIR__ . "/build/"; // DONOT EDIT!!!!
 
 if(is_dir($target)){
@@ -23,3 +26,4 @@ foreach (["vendor","src","public"] as $item){
 }
 system("cp ".__DIR__."/../bootstrap.php ".__DIR__."/build/");
 
+fwrite(STDOUT,"完成\n");

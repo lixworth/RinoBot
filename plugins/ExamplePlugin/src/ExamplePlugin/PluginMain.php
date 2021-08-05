@@ -14,8 +14,7 @@ namespace ExamplePlugin;
 
 use RinoBot\plugin\PluginBase;
 
-
-class ExamplePluginMain extends PluginBase
+class PluginMain extends PluginBase
 {
     public function onEnable()
     {

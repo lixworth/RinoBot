@@ -12,8 +12,7 @@ declare(strict_types=1);
 
 namespace RinoBot;
 
-use ExamplePlugin\ExamplePluginMain;
-use Predis\Client;
+use Composer\Autoload\ClassLoader;
 use RinoBot\utils\Config;
 /**
  * Class RinoBot
@@ -31,6 +30,7 @@ class RinoBot
 
     public $redis;
     public array $plugins;
+    public ClassLoader $loader;
 
     /**
      * RinoBot constructor.
@@ -41,7 +41,7 @@ class RinoBot
     public function __construct($config_dir, $plugin_dir, $runtime_dir)
     {
         self::$rinoBot = $this;
-
+        $this->loader = new ClassLoader(PUBLIC_DIR . "/../vendor/");
         //todo error page
 
         // 检测最低配置需求
@@ -65,7 +65,7 @@ class RinoBot
                 }
 
             } else {
-                $predis = new Client([
+                $predis = new \Predis\Client([
                     'scheme' => 'tcp',
                     'host' => '10.0.0.1',
                     'port' => 6379,
@@ -80,7 +80,7 @@ class RinoBot
         $this->config_dir = $config_dir;
         $this->plugin_dir = $plugin_dir;
         $this->runtime_dir = $runtime_dir;
-
+        $this->plugins = [];
         // 校验目录
         foreach ([$config_dir, $plugin_dir, $runtime_dir] as $item) {
             if (!is_dir($item)) {
@@ -114,31 +114,35 @@ class RinoBot
         }
 
         // 读取并注册插件
-        $plugins = array();
+        $load_plugins = array();
         if ($pd = opendir($plugin_dir)) {
             while (($file = readdir($pd)) !== false) {
                 if ($file == "." || $file == "..") {
                     continue;
                 }
                 if (is_dir($plugin_dir . $file)) {
-                    $plugins[] = $file;
+                    $load_plugins[] = $file;
                 }
             }
             closedir($pd);
         }
-        spl_autoload_register(function ($class) use ($plugins) {
-            $namespace = explode("\\", $class);
-            if (in_array($namespace[0], $plugins)) { // not work
-                if (file_exists(str_replace("\/","/",$this->plugin_dir . $class . ".php"))) {
-                    echo str_replace("\'\'","/",$this->plugin_dir . $class . ".php");
-                }
-            }
 
-        });
-        foreach ($plugins as $plugin) {
+        // 检测插件基础结构
+        foreach ($load_plugins as $key => $plugin) {
+            if (file_exists($this->plugin_dir . $plugin . "/plugin.yml")) {
+                $this->loader->addPsr4("", $this->plugin_dir . $plugin . "/src");
+            } else {
+                unset($load_plugins[$key]);
+            }
+        }
+        $this->loader->register(); // 插件自动加载
+
+        // 实例化插件
+        foreach ($load_plugins as $plugin) {
             $this->registerPlugin($plugin);
         }
 
+        print_r($this->plugins);
         unset($config_dir);
         unset($plugin_dir);
         unset($runtime_dir);
@@ -155,15 +159,10 @@ class RinoBot
         if (is_dir($this->plugin_dir . $plugin . "/")) {
             if (Config::checkConfigStructure($this->plugin_dir . $plugin . "/plugin.yml", [
                 "name", "main", "author", "version", "api-version"
-            ])) { //todo ...bug
+            ])) {
                 if ($config = Config::parseFile($this->plugin_dir . $plugin . "/plugin.yml")) {
-                    if(file_exists($this->plugin_dir . $plugin . "/".$config["main"].".php")){
-//                        require_once $this->plugin_dir . $plugin . "/".$config["main"].".php";
-                        $this->plugins[$plugin] = new $config["main"];
-                    }else{
-                        exit("插件 $plugin 加载失败: 入口文件不存在");
-                    }
-                }else{
+                    $this->plugins[$plugin] = new $config["main"];
+                } else {
                     exit("插件 $plugin 加载失败：plugin.yml 读取失败");
                 }
             } else {
@@ -174,9 +173,6 @@ class RinoBot
         }
     }
 
-    /**
-     * @return Client
-     */
     public function getRedis()
     {
         if (!$this->redis->isConnected()) {

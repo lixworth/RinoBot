@@ -22,6 +22,7 @@ if(file_exists(__DIR__."/vendor/autoload.php")){
 //    });
     exit("您的安装包不完整 请重新下载 https://github.com/lixworth/RinoBot/releases ");
 }
-
+//开启gc
+gc_enable();
 // 实例化 RinoBot
 $app = new \RinoBot\RinoBot(CONFIG_DIR,PLUGIN_DIE,RUNTIME_DIE);

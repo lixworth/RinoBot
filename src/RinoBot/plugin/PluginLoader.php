@@ -60,6 +60,7 @@ class PluginLoader extends Singleton
                 $this->registerPlugin($plugin_directory, $plugin);
             }
         }
+        unset($plugin_list);
     }
 
     public function registerPlugin(string $plugin_directory, string $plugin): void
@@ -68,6 +69,7 @@ class PluginLoader extends Singleton
             $this->loader->addPsr4("", $plugin_directory . $plugin . "/src");
             $this->loader->register();
             $this->plugins[$plugin] = new $config["main"];
+            unset($config);
         } else {
             exit("插件 $plugin 加载失败：plugin.yml 读取失败");
         }

@@ -14,6 +14,8 @@ namespace RinoBot;
 
 use Composer\Autoload\ClassLoader;
 use RinoBot\plugin\PluginLoader;
+use RinoBot\protocol\MiraiBotProtocol;
+use RinoBot\protocol\network\MiraiBotNetWork;
 use RinoBot\utils\Config;
 use RinoBot\utils\Logger;
 
@@ -129,10 +131,16 @@ class RinoBot extends Singleton
         $this->loader->register();//composer init
 
 
-        print_r($this->pluginLoader->getPlugins());
+//        print_r($this->pluginLoader->getPlugins());
         unset($config_dir);
         unset($plugin_dir);
         unset($runtime_dir);
+
+        new MiraiBotProtocol([
+            "api" => "",
+            "verify_key" => "",
+            "qq" => 1
+        ]);
     }
 
     public function getRedis()

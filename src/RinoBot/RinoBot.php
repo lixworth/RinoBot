@@ -176,17 +176,20 @@ class RinoBot
     public function check_php_ext(int $level = 1)
     {
         $error = [];
+        if(!version_compare(phpversion(),"7.4",">=")){
+            $error[] = "PHP Version must >= 7.4";
+        }
         if ($level > 1) {
             if (!extension_loaded("curl")) {
-                $error[] = "建议开启 curl 扩展，获取更多功能";
+                $error[] = "Please enable curl extension.";
             }
             if (!extension_loaded("redis")) {
-                $error[] = "建议开启 redis 扩展，当前使用predis实现于redis的缓存链接，性能低下";
+                $error[] = "Suggest enable redis extension,default use the predis project to replace,but its performance is low";
             }
         }
         if ($level > 2) {
             if (!extension_loaded("swoole")) {
-                $error[] = "您当前开启最高检测等级，请安装 swoole 扩展，体验更多内容（相关区别可查看: xxx ）";
+                $error[] = "Suggest enable swoole extension";
             }
         }
 //        if(!extension_loaded("yaml")){

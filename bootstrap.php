@@ -20,7 +20,7 @@ if (file_exists(__DIR__ . "/vendor/autoload.php")) {
 //            include_once SOURCE_DIR . $class . ".php";
 //        }
 //    });
-    exit("您的安装包不完整 请重新下载 https://github.com/lixworth/RinoBot/releases php public/index.php");
+    exit("Your installer package is incomplete,please download the latest release package from https://github.com/lixworth/RinoBot/releases");
 }
 //开启gc
 gc_enable();

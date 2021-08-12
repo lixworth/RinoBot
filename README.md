@@ -24,7 +24,7 @@ RinoBot 是一个为统一聊天机器人扩展开发的框架，编写一份插
 * 可视化控制面板
 * Redis 缓存机制
 * 日志记录系统
-
+* [计划中] 守护进程化
 
 ## 支持协议
 * Telegram API ( [@nyancatda](https://github.com/nyancatda) ) [Telegram Bot API](https://core.telegram.org/bots/api)

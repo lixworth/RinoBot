@@ -18,7 +18,7 @@ class PluginMain extends PluginBase
 {
     public function onEnable()
     {
-        fwrite(STDOUT, "第一个插件运行咯");
+//        fwrite(STDOUT, "第一个插件运行咯");
     }
 
 

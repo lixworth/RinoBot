@@ -30,7 +30,7 @@ class MiraiBotNetWork
      * @param string $verifyKey
      * @return mixed
      */
-    public function requestVerify(string $verifyKey): object
+    public function requestVerify(string $verifyKey)
     {
         $request = Curl::send_post($this->api . "/verify", json_encode([
             "verifyKey" => $verifyKey
@@ -46,7 +46,7 @@ class MiraiBotNetWork
      * @param int $qq
      * @return mixed
      */
-    public function requestBind(string $session, int $qq): object
+    public function requestBind(string $session, int $qq)
     {
         $request = Curl::send_post($this->api . "/bind", json_encode([
             "sessionKey" => $session,
@@ -63,7 +63,7 @@ class MiraiBotNetWork
      * @param int $qq
      * @return mixed
      */
-    public function requestRelease(string $session, int $qq): object
+    public function requestRelease(string $session, int $qq)
     {
         $request = Curl::send_post($this->api . "/release", json_encode([
             "sessionKey" => $session,

@@ -29,6 +29,7 @@ RinoBot 是一个为统一聊天机器人扩展开发的框架，编写一份插
 ## 支持协议
 * Telegram API ( [@nyancatda](https://github.com/nyancatda) ) [Telegram Bot API](https://core.telegram.org/bots/api)
 * Mirai QQ HTTP API [mirai-api-http](https://github.com/project-mirai/mirai-api-http)
+* Discord
 * .....
 ## 开始
 

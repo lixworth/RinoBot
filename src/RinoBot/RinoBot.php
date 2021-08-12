@@ -23,8 +23,9 @@ use RinoBot\utils\Logger;
  * Class RinoBot
  * @package RinoBot
  */
-class RinoBot extends Singleton
+class RinoBot
 {
+    private static RinoBot $instance;
 
     public string $config_dir;
     public string $plugin_dir;
@@ -36,7 +37,6 @@ class RinoBot extends Singleton
     public ClassLoader $loader;
     private PluginLoader $pluginLoader;
     private Logger $logger;
-
     /**
      * RinoBot constructor.
      * @param $config_dir
@@ -45,7 +45,8 @@ class RinoBot extends Singleton
      */
     public function __construct($config_dir, $plugin_dir, $runtime_dir)
     {
-        parent::__construct();
+        self::$instance = $this;
+
         $this->loader = new ClassLoader(PUBLIC_DIR . "/../vendor/");
         //todo error page
 
@@ -141,6 +142,14 @@ class RinoBot extends Singleton
             "verify_key" => "",
             "qq" => 1
         ]);
+    }
+
+    /**
+     * @return RinoBot
+     */
+    public static function getInstance(): RinoBot
+    {
+        return self::$instance;
     }
 
     public function getRedis()

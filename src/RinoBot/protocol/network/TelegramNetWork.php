@@ -11,6 +11,7 @@ class TelegramNetWork extends NetWork
 
     /**
      * 发送信息 (纪念🐱封装的第一个网络协议)
+     * https://core.telegram.org/bots/api#sendmessage
      * @param string $Token
      * @param string $ChatID 聊天ID
      * @param string $Text
@@ -46,6 +47,7 @@ class TelegramNetWork extends NetWork
 
     /**
      * 转发消息 (Service messages can't be forwarded)
+     * https://core.telegram.org/bots/api#forwardmessage
      * @param string $Token
      * @param string $ChatID 目标聊天ID
      * @param string $FromChatId 需要被转发的消息来源的聊天ID
@@ -66,6 +68,7 @@ class TelegramNetWork extends NetWork
 
     /**
      * 复制消息 (与转发消息不同，复制消息不会显示原消息链接，Service messages and invoice messages can't be copied)
+     * https://core.telegram.org/bots/api#copymessage
      * @param string $Token
      * @param string $ChatID 目标聊天ID
      * @param string $FromChatId 需要被复制的消息来源的聊天ID
@@ -94,20 +97,31 @@ class TelegramNetWork extends NetWork
     }
 
     /**
+     * ToDo:$Photo文件流处理
      * 发送图片
+     * https://core.telegram.org/bots/api#sendphoto
      * @param string $Token
      * @param string $ChatID 目标聊天ID
      * @param string $Photo 图片URL
-     * @param string|null $Caption 图片的标题(可选)
+     * @param string|null $Caption (可选)图片的标题
+     * @param bool|false $disable_notification (可选)静默发送消息，用户将收到无声通知
+     * @param string|null $reply_to_message_id (可选)回复消息ID，不是回复消息留空
+     * @param bool|true $allow_sending_without_reply (可选)如果需要被回复的消息不存在是否发送
      * @return bool|string
      */
     public function sendPhoto(
         string $Token, string $ChatID, string $Photo,
-        string $Caption = NULL)
+        string $Caption = NULL,
+        bool $disable_notification = false,
+        string $reply_to_message_id = NULL,
+        bool $allow_sending_without_reply=true)
     {
-        return Curl::get($this->api . $Token .
-            "/forwardMessage?chat_id=" . $ChatID .
-            "&photo=" . $Photo .
-            "&caption=" . $Caption);
+        return Curl::get($this->api.$Token.
+            "/forwardMessage?chat_id=".$ChatID.
+            "&photo=".$Photo.
+            "&caption=".$Caption.
+            "&disable_notification=".$disable_notification.
+            "&reply_to_message_id=".$reply_to_message_id.
+            "&allow_sending_without_reply=".$allow_sending_without_reply);
     }
 }

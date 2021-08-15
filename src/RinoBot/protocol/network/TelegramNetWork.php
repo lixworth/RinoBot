@@ -97,36 +97,36 @@ class TelegramNetWork extends NetWork
     }
 
     /**
-     * ToDo:$Photo文件流处理
      * 发送图片
      * https://core.telegram.org/bots/api#sendphoto
      * @param string $Token
      * @param string $ChatID 目标聊天ID
-     * @param string $Photo 图片URL
-     * @param string|null $Caption (可选)图片的标题，0-1024字
+     * @param string $Photo 图片url或者input file < 10M
+     * @param string|null $Caption (可选)图片的标题
      * @param bool|false $disable_notification (可选)静默发送消息，用户将收到无声通知
-     * @param int|null $reply_to_message_id (可选)回复消息ID，不是回复消息留空
+     * @param string|null $reply_to_message_id (可选)回复消息ID，不是回复消息留空
      * @param bool|true $allow_sending_without_reply (可选)如果需要被回复的消息不存在是否发送
      * @return bool|string
      */
     public function sendPhoto(
         string $Token, string $ChatID, string $Photo,
-        string $Caption = NULL,
+        string $Caption = null,
         bool $disable_notification = false,
-        int $reply_to_message_id = NULL,
+        string $reply_to_message_id = null,
         bool $allow_sending_without_reply=true)
     {
-        return Curl::get($this->api.$Token.
-            "/sendPhoto?chat_id=".$ChatID.
-            "&photo=".$Photo.
-            "&caption=".$Caption.
-            "&disable_notification=".$disable_notification.
-            "&reply_to_message_id=".$reply_to_message_id.
-            "&allow_sending_without_reply=".$allow_sending_without_reply);
+        return Curl::post($this->api.$Token."/forwardMessage",[
+            "chat_id" => $ChatID,
+            "photo" => $Photo,
+            "caption" => $Caption,
+            "disable_notification" => $disable_notification,
+            "reply_to_message_id" => $reply_to_message_id,
+            "allow_sending_without_reply" => $allow_sending_without_reply,
+        ]);
     }
 
     /**
-     * ToDo:$audio文件流处理
+     *
      * 发送音频
      * https://core.telegram.org/bots/api#sendaudio
      * @param string $Token
@@ -138,6 +138,7 @@ class TelegramNetWork extends NetWork
      * @param bool|false $disable_notification (可选)静默发送消息，用户将收到无声通知
      * @param int|null $reply_to_message_id (可选)回复消息ID，不是回复消息留空
      * @param bool|true $allow_sending_without_reply (可选)如果需要被回复的消息不存在是否发送
+     * @return bool|string
      */
     public function sendAudio(
         string $Token, string $ChatID,string $audio,
@@ -148,15 +149,16 @@ class TelegramNetWork extends NetWork
         int $reply_to_message_id=NULL,
         bool $allow_sending_without_reply=true)
     {
-        return Curl::get($this->api.$Token.
-            "/sendAudio?chat_id=".$ChatID.
-            "&audio=".$audio.
-            "&caption=".$caption.
-            "&performer=".$performer.
-            "&title=".$title.
-            "&disable_notification=".$disable_notification.
-            "&reply_to_message_id=".$reply_to_message_id.
-            "&allow_sending_without_reply=".$allow_sending_without_reply);
+        return Curl::post($this->api . $Token . "/sendAudio",[
+            "chat_id" => $ChatID,
+            "audio" => $audio,
+            "caption" => $caption,
+            "performer" => $performer,
+            "title" => $title,
+            "disable_notification" => $disable_notification,
+            "reply_to_message_id" => $reply_to_message_id,
+            "allow_sending_without_reply" => $allow_sending_without_reply,
+        ]);
     }
 
     /**
@@ -170,6 +172,7 @@ class TelegramNetWork extends NetWork
      * @param bool|false $disable_notification (可选)静默发送消息，用户将收到无声通知
      * @param int|null $reply_to_message_id (可选)回复消息ID，不是回复消息留空
      * @param bool|true $allow_sending_without_reply (可选)如果需要被回复的消息不存在是否发送
+     * @return bool|string
      */
     public function sendDocument(
         string $Token, string $ChatID,string $document,
@@ -178,12 +181,13 @@ class TelegramNetWork extends NetWork
         int $reply_to_message_id=NULL,
         bool $allow_sending_without_reply=false)
     {
-        return Curl::get($this->api.$Token.
-            "/sendDocument?chat_id=".$ChatID.
-            "&document=".$document.
-            "&caption=".$caption.
-            "&disable_notification=".$disable_notification.
-            "&reply_to_message_id=".$reply_to_message_id.
-            "&allow_sending_without_reply=".$allow_sending_without_reply);
+        return Curl::post($this->api.$Token. "/sendDocument",[
+            "chat_id" => $ChatID,
+            "document" => $document,
+            "caption" => $caption,
+            "disable_notification" => $disable_notification,
+            "reply_to_message_id" => $reply_to_message_id,
+            "allow_sending_without_reply" => $allow_sending_without_reply,
+        ]);
     }
 }

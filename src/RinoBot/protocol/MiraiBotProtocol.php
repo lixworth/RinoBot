@@ -23,12 +23,13 @@ class MiraiBotProtocol implements Protocol
     public bool $connect = false;
     public array $config;
     private RinoBot $rinoBot;
+
     public function __construct($data)
     {
         $this->config = $data;
         $this->miraiBotNetWork = new MiraiBotNetWork($data["api"]);
         $this->rinoBot = RinoBot::getInstance();
-        if(!$this->connect){
+        if (!$this->connect) {
             $this->connect();
         }
     }
@@ -43,12 +44,12 @@ class MiraiBotProtocol implements Protocol
 
     public function connect(): void
     {
-        if(!$this->connect){
+        if (!$this->connect) {
             $verify = $this->getNetWork()->requestVerify($this->config["verify_key"]);
-            if(@$verify->code !== null && $verify->code == 0){
-                if($verify->session !== null) {
-                    $bind = $this->getNetWork()->requestBind($verify->session,$this->config["qq"]);
-                    if($bind->code == 0){
+            if (@$verify->code !== null && $verify->code == 0) {
+                if ($verify->session !== null) {
+                    $bind = $this->getNetWork()->requestBind($verify->session, $this->config["qq"]);
+                    if ($bind->code == 0) {
                         try {
                             $this->getRinoBot()->getRedis()->set('MiraiBot_' . $this->config["qq"], $verify->session);
                         } catch (\Exception $exception) {

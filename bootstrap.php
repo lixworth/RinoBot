@@ -20,7 +20,7 @@ if (file_exists(__DIR__ . "/vendor/autoload.php")) {
 //            include_once SOURCE_DIR . $class . ".php";
 //        }
 //    });
-    exit("Your installer package is incomplete,please download the latest release package from https://github.com/lixworth/RinoBot/releases");
+    exit("Your installer package is incomplete,please download the latest release package from https://github.com/lixworth/RinoBot/releases \n");
 }
 //开启gc
 gc_enable();

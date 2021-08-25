@@ -18,6 +18,9 @@ use RinoBot\protocol\MiraiBotProtocol;
 use RinoBot\protocol\network\MiraiBotNetWork;
 use RinoBot\utils\Config;
 use RinoBot\utils\Logger;
+use RinoBot\utils\Runtime;
+use Swoole\Http\Server;
+use Swoole\Process;
 
 /**
  * Class RinoBot
@@ -37,6 +40,8 @@ class RinoBot
     public ClassLoader $loader;
     private PluginLoader $pluginLoader;
     private Logger $logger;
+    private $process;
+    private Server $http_server;
     /**
      * RinoBot constructor.
      * @param $config_dir
@@ -45,6 +50,8 @@ class RinoBot
      */
     public function __construct($config_dir, $plugin_dir, $runtime_dir)
     {
+        Runtime::setTime(START_TIME);
+        echo "RinoBot Link Start! \n";
         self::$instance = $this;
 
         $this->loader = new ClassLoader(PUBLIC_DIR . "/../vendor/");
@@ -65,6 +72,27 @@ class RinoBot
                 $this->logger->error($nmsl);
             }
         }
+        $this->logger->info("RinoBot Start Booting form config");
+        // 校验RinoBot运行配置
+        if ($this->config = Config::parseFile($config_dir . "rino-bot.yaml")) {
+            if (!Config::checkConfigStructure($config_dir . "rino-bot.yaml", ["debug", "bots" => []])) {
+                exit("rino-bot.yaml 配置文件错误 请对比实例或请删除再次运行程序重新生成");
+            }
+        } else {
+            if (!Config::generateFile($config_dir . "rino-bot.yaml", [
+                "debug" => true,
+                "bots" => [
+                    [
+                        "bot_name" => "Rumao",
+                        "bot_id" => "233",
+                        "bot_key" => "233"
+                    ]
+                ] //todo bot structure
+            ])) {
+                exit("rino-bot.yaml 生成错误 原因: 未知");
+            }
+        }
+
         // 注册redis
         try {
             if (class_exists('\Redis')) {
@@ -89,6 +117,12 @@ class RinoBot
 
         }
 
+        if($this->redis){
+            $this->logger->success("Redis Provide is enabled,connect to tcp://127.0.0.1:6379");
+        }
+
+        $this->logger->info("Start loading plugins");
+
         $this->config_dir = $config_dir;
         $this->plugin_dir = $plugin_dir;
         $this->runtime_dir = $runtime_dir;
@@ -105,31 +139,19 @@ class RinoBot
             }
         }
 
-        // 校验RinoBot运行配置
-        if ($this->config = Config::parseFile($config_dir . "rino-bot.yaml")) {
-            if (!Config::checkConfigStructure($config_dir . "rino-bot.yaml", ["debug", "bots" => []])) {
-                exit("rino-bot.yaml 配置文件错误 请对比实例或请删除再次运行程序重新生成");
-            }
-        } else {
-            if (!Config::generateFile($config_dir . "rino-bot.yaml", [
-                "debug" => true,
-                "bots" => [
-                    [
-                        "bot_name" => "Rumao",
-                        "bot_id" => "233",
-                        "bot_key" => "233"
-                    ]
-                ] //todo bot structure
-            ])) {
-                exit("rino-bot.yaml 生成错误 原因: 未知");
-            }
-        }
-
         $this->pluginLoader = new PluginLoader($this->loader);
         $this->pluginLoader->loadPlugins($plugin_dir); // 插件自动加载
-
-
         $this->loader->register();//composer init
+
+        $plugins_list = null;
+        foreach ($this->pluginLoader->getPlugins() as $key=>$item){
+            if($plugins_list === null){
+                $plugins_list = $key;
+            }else{
+                $plugins_list = $plugins_list.",".$key;
+            }
+        }
+        $this->logger->success("Plugins is loaded successfully ($plugins_list)");
 
 
 //        print_r($this->pluginLoader->getPlugins());
@@ -137,11 +159,48 @@ class RinoBot
         unset($plugin_dir);
         unset($runtime_dir);
 
-        new MiraiBotProtocol([
-            "api" => "",
-            "verify_key" => "",
-            "qq" => 1
-        ]);
+//        new MiraiBotProtocol([
+//            "api" => "",
+//            "verify_key" => "",
+//            "qq" => 1
+//        ]);
+        $this->process = new \stdClass();
+        $this->process->webhook = new Process(function (){
+            $this->http_server = new \Swoole\Http\Server("127.0.0.1",9501);
+
+            $this->http_server->on('start', function ($server) {
+                $this->logger->info("Webhook Swoole http server is started at http://127.0.0.1:9501");
+            });
+
+            $this->http_server->on('request', function ($request, $response) {
+                $response->header('Content-Type', 'text/plain');
+                $response->end('Hello World');
+            });
+            $this->http_server->start();
+        });
+        $this->process->panel = new Process(function (){
+            $this->http_server = new \Swoole\Http\Server("127.0.0.1",9502);
+
+            $this->http_server->on('start', function ($server) {
+                $this->logger->info("Panel Swoole http server is started at http://127.0.0.1:9502");
+            });
+
+            $this->http_server->on('request', function ($request, $response) {
+                $response->header('Content-Type', 'text/plain');
+                $response->end('Hello World');
+            });
+            $this->http_server->start();
+        });
+
+        $this->process->webhook->start();
+        $this->process->panel->start();
+
+        $this->logger->success("Congratulations! RinoBot Console mode started successfully! (".Runtime::end().")");
+        $this->logger->info("=================================================================");
+        while (true){
+            $msg = trim(fgets(STDIN));
+            $this->logger->info("未知指令");
+        }
     }
 
     /**

@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace RinoBot;
 
 use Composer\Autoload\ClassLoader;
+use RinoBot\http\HttpServer;
+use RinoBot\http\SwooleRouter;
 use RinoBot\plugin\PluginLoader;
 use RinoBot\protocol\MiraiBotProtocol;
 use RinoBot\protocol\network\MiraiBotNetWork;
@@ -40,8 +42,8 @@ class RinoBot
     public ClassLoader $loader;
     private PluginLoader $pluginLoader;
     private Logger $logger;
-    private $process;
-    private Server $http_server;
+    private \stdClass $process;
+    private \stdClass $http_server;
     /**
      * RinoBot constructor.
      * @param $config_dir
@@ -164,36 +166,21 @@ class RinoBot
 //            "verify_key" => "",
 //            "qq" => 1
 //        ]);
+
+        SwooleRouter::get("/","RinoBot\\controller\\ApiController@index","panel");
+
+
         $this->process = new \stdClass();
-        $this->process->webhook = new Process(function (){
-            $this->http_server = new \Swoole\Http\Server("127.0.0.1",9501);
+        $this->http_server = new \stdClass();
 
-            $this->http_server->on('start', function ($server) {
-                $this->logger->info("Webhook Swoole http server is started at http://127.0.0.1:9501");
-            });
+//        $this->process->webhook = new Process(function (){
+//            $this->http_server->webhook = new HttpServer("webhook","127.0.0.1",9501);
+//        });
+        $this->http_server->webhook = new HttpServer("panel","127.0.0.1",9501);
 
-            $this->http_server->on('request', function ($request, $response) {
-                $response->header('Content-Type', 'text/plain');
-                $response->end('Hello World');
-            });
-            $this->http_server->start();
-        });
-        $this->process->panel = new Process(function (){
-            $this->http_server = new \Swoole\Http\Server("127.0.0.1",9502);
-
-            $this->http_server->on('start', function ($server) {
-                $this->logger->info("Panel Swoole http server is started at http://127.0.0.1:9502");
-            });
-
-            $this->http_server->on('request', function ($request, $response) {
-                $response->header('Content-Type', 'text/plain');
-                $response->end('Hello World');
-            });
-            $this->http_server->start();
-        });
-
-        $this->process->webhook->start();
-        $this->process->panel->start();
+//        $this->process->panel = new Process(function (){
+//            $this->http_server->panel = new HttpServer("panel","127.0.0.1",9502);
+//        });
 
         $this->logger->success("Congratulations! RinoBot Console mode started successfully! (".Runtime::end().")");
         $this->logger->info("=================================================================");

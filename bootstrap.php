@@ -10,18 +10,22 @@
 declare(strict_types=1);
 
 // RinoBot Bootstrap Script, Version 001
+if(\Phar::running(true) === ""){
+    fwrite(STDOUT,"Non-packaged installation detected. This will degrade autoloading speed and make startup times longer. \n");
 
-if (file_exists(__DIR__ . "/vendor/autoload.php")) {
-    require_once __DIR__ . "/vendor/autoload.php";
-} else {
-    // 自动加载
+    if (file_exists(__DIR__ . "/vendor/autoload.php")) {
+        require_once __DIR__ . "/vendor/autoload.php";
+    } else {
+        // 自动加载
 //    spl_autoload_register(function ($class) {
 //        if (file_exists(SOURCE_DIR . $class . ".php")) {
 //            include_once SOURCE_DIR . $class . ".php";
 //        }
 //    });
-    exit("Your installer package is incomplete,please download the latest release package from https://github.com/lixworth/RinoBot/releases \n");
+        exit("Your installer package is incomplete,please download the latest release package from https://github.com/lixworth/RinoBot/releases \n");
+    }
 }
+
 //开启gc
 gc_enable();
 // 实例化 RinoBot

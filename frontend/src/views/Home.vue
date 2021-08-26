@@ -1,21 +1,19 @@
 <template>
-  <div class="home">
-    <div class="card" style="width: 18rem;">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
-      </div>
+    <div>
+        <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+            <img src="@/assets/img.png" width="30%">
+            <h1 class="display-4 fw-normal">RinoBot Panel</h1>
+            <p class="fs-5 text-muted">RinoBot 是一个为统一聊天机器人扩展开发的框架，编写一份插件用于多种机器人协议。</p>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 // @ is an alias to /src
 
 export default {
-  name: 'Home',
-  components: {
-  }
+    name: 'Home',
+    components: {
+    }
 }
 </script>

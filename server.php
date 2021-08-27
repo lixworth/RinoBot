@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 define("START_TIME", microtime());
-const START_TYPE = "cli";
+const START_TYPE = "server";
 
 // 定义全局变量
 const PUBLIC_DIR = __DIR__ . "/public/";

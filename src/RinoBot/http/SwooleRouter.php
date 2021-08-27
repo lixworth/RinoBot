@@ -26,7 +26,7 @@ class SwooleRouter extends Singleton implements RouterInterface
         return self::$callbacks;
     }
 
-    public static function get($router,$target,$name = null)
+    public static function get($router,$target,$name = "default")
     {
         self::$callbacks[$name][$router] = [
             "method" => "GET",
@@ -34,7 +34,7 @@ class SwooleRouter extends Singleton implements RouterInterface
         ];
     }
 
-    public static function post($router,$target,$name = null)
+    public static function post($router,$target,$name = "default")
     {
         self::$callbacks[$name][$router] = [
             "method" => "POST",

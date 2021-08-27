@@ -173,21 +173,39 @@ class RinoBot
         $this->process = new \stdClass();
         $this->http_server = new \stdClass();
 
-//        $this->process->webhook = new Process(function (){
-//            $this->http_server->webhook = new HttpServer("webhook","127.0.0.1",9501);
-//        });
-        $this->http_server->webhook = new HttpServer("panel","127.0.0.1",9501);
+        $this->process->webhook = new Process(function (){
+            $this->http_server->webhook = new HttpServer("panel","127.0.0.1",9501);
+        });
 
-//        $this->process->panel = new Process(function (){
-//            $this->http_server->panel = new HttpServer("panel","127.0.0.1",9502);
-//        });
+        $this->process->panel = new Process(function (){
+            $this->http_server->panel = new HttpServer("panel","127.0.0.1",9502);
+        });
 
         $this->logger->success("Congratulations! RinoBot Console mode started successfully! (".Runtime::end().")");
         $this->logger->info("=================================================================");
-        while (true){
-            $msg = trim(fgets(STDIN));
-            $this->logger->info("未知指令");
+
+        $this->process->webhook->start();
+        $this->process->panel->start();
+        if(START_TYPE === "cli"){
+            while (true){
+                $msg = trim(fgets(STDIN));
+                switch ($msg){
+                    case "stop":
+//                        $this->http_server->panel->getHttp()->close();
+//                        $this->process->webhook->close();
+//                        $this->process->panel->close();
+                        $this->logger->info("RinoBot 已关闭");
+                        return;
+                        break;
+                    default:
+                        $this->logger->info("未知指令");
+                        break;
+                }
+            }
+        }else{
+            $this->logger->info("RinoBot 已启动成功 启动进程退出");
         }
+
     }
 
     /**

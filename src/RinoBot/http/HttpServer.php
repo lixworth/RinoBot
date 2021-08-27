@@ -11,6 +11,7 @@
 namespace RinoBot\http;
 
 use RinoBot\RinoBot;
+use RinoBot\Singleton;
 use Swoole\Http\Request;
 use Swoole\Http\Response;
 use Swoole\Http\Server;
@@ -20,7 +21,14 @@ class HttpServer
 {
     private Server $http;
 
-    public function __construct(string $name = "Swoole Server",string $ip = "127.0.0.1",int $port = 9502,$config = ['enable_coroutine' => true],$inside = true)
+    /**
+     * @return Server
+     */
+    public function getHttp(): Server
+    {
+        return $this->http;
+    }
+    public function __construct(string $name = "default",string $ip = "127.0.0.1",int $port = 9502,$config = ['enable_coroutine' => true],$inside = true)
     {
         $this->http = new Server($ip,$port);
         $this->http->set($config);
@@ -48,5 +56,9 @@ class HttpServer
 
     }
 
+    public function close()
+    {
+        $this->http->stop();
+    }
 
 }

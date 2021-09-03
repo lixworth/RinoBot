@@ -10,12 +10,12 @@
 
 declare(strict_types=1);
 
-namespace RinoBot\protocol;
+namespace RinoBot\Protocol;
 
 
-use RinoBot\protocol\network\MiraiBotNetWork;
+use RinoBot\Protocol\Network\MiraiBotNetWork;
 use RinoBot\RinoBot;
-use RinoBot\utils\Logger;
+use RinoBot\Utils\Logger;
 
 class MiraiBotProtocol implements Protocol
 {

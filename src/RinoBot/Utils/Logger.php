@@ -10,18 +10,18 @@
 
 declare(strict_types=1);
 
-namespace RinoBot\utils;
+namespace RinoBot\Utils;
 
 use RinoBot\Singleton;
 
 /**
  * Class Logger
- * @package RinoBot\utils
+ * @package RinoBot\Utils
  * 日志模板
  */
 class Logger extends Singleton
 {
-    private $format = "";
+    private string $format = "";
 
 
     public static function template($from, $type, $message): string
@@ -32,7 +32,7 @@ class Logger extends Singleton
     /**
      * @param $message
      * @param string $from
-     * @return string
+     * @return void
      */
     public function info($message, string $from = 'Server'): void
     {
@@ -42,7 +42,7 @@ class Logger extends Singleton
     /**
      * @param $message
      * @param string $from
-     * @return string
+     * @return void
      */
     public function success($message, string $from = 'Server'): void
     {
@@ -52,10 +52,20 @@ class Logger extends Singleton
     /**
      * @param $message
      * @param string $from
-     * @return string
+     * @return void
      */
     public function error($message, string $from = 'Server'): void
     {
         fwrite(STDOUT, self::template($from, "ERROR", $message));
+    }
+
+    /**
+     * @param $message
+     * @param string $from
+     * @return void
+     */
+    public function debug($message, string $from = 'Server'): void
+    {
+        fwrite(STDOUT, self::template($from, "DEBUG", $message));
     }
 }

@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace RinoBot;
 
-
 class Singleton
 {
     /** @var self|null */

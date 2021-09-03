@@ -10,13 +10,13 @@
  * @author Cattery Team
  */
 
-namespace RinoBot\plugin;
+namespace RinoBot\Plugin;
 
 
 use Composer\Autoload\ClassLoader;
 use RinoBot\Singleton;
-use RinoBot\utils\Config;
-use RinoBot\utils\Logger;
+use RinoBot\Utils\Config;
+use RinoBot\Utils\Logger;
 
 class PluginLoader extends Singleton
 {
@@ -66,13 +66,13 @@ class PluginLoader extends Singleton
 
     public function registerPlugin(string $plugin_directory, string $plugin): void
     {
-        if ($config = Config::parseFile($plugin_directory . $plugin . "/plugin.yml")) {
+        if ($config = Config::parseFile($plugin_directory . $plugin . "/Plugin.yml")) {
             $this->loader->addPsr4("", $plugin_directory . $plugin . "/src");
             $this->loader->register();
             $this->plugins[$plugin] = new $config["main"];
             unset($config);
         } else {
-            exit("插件 $plugin 加载失败：plugin.yml 读取失败");
+            exit("插件 $plugin 加载失败：Plugin.yml 读取失败");
         }
     }
 
@@ -82,10 +82,10 @@ class PluginLoader extends Singleton
             Logger::getInstance()->error("插件 $plugin 加载失败：文件夹不存在");
             return false;
         }
-        if (!Config::checkConfigStructure($plugin_directory . $plugin . "/plugin.yml", [
+        if (!Config::checkConfigStructure($plugin_directory . $plugin . "/Plugin.yml", [
             "name", "main", "author", "version", "api-version"
         ])) {
-            Logger::getInstance()->error("插件 $plugin 加载失败：plugin.yml 结构不符合");
+            Logger::getInstance()->error("插件 $plugin 加载失败：Plugin.yml 结构不符合");
             return false;
         }
         return true;

@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace RinoBot\protocol\network;
+namespace RinoBot\Protocol\Network;
 
 abstract class NetWork
 {

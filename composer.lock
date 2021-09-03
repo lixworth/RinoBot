@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7eb45653b852c0b52e6776e4a8941d54",
+    "content-hash": "e9845b03b018bd34fd38708bc63141c9",
     "packages": [
         {
             "name": "brick/math",
@@ -1360,6 +1360,56 @@
             "time": "2021-08-16T21:05:00+00:00"
         },
         {
+            "name": "nikic/fast-route",
+            "version": "v1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nikic/FastRoute.git",
+                "reference": "181d480e08d9476e61381e04a71b34dc0432e812"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nikic/FastRoute/zipball/181d480e08d9476e61381e04a71b34dc0432e812",
+                "reference": "181d480e08d9476e61381e04a71b34dc0432e812",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.35|~5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "FastRoute\\": "src/"
+                },
+                "files": [
+                    "src/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Nikita Popov",
+                    "email": "nikic@php.net"
+                }
+            ],
+            "description": "Fast request router for PHP",
+            "keywords": [
+                "router",
+                "routing"
+            ],
+            "support": {
+                "issues": "https://github.com/nikic/FastRoute/issues",
+                "source": "https://github.com/nikic/FastRoute/tree/master"
+            },
+            "time": "2018-02-13T20:26:39+00:00"
+        },
+        {
             "name": "opis/closure",
             "version": "3.6.2",
             "source": {
@@ -1933,6 +1983,47 @@
                 }
             ],
             "time": "2021-08-11T01:06:55+00:00"
+        },
+        {
+            "name": "rikkatech/swoole-httpserver",
+            "version": "v0.1-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rikkatech/swoole-httpserver.git",
+                "reference": "12ab7e8fe53a645b709270103c3d04feb1e6b683"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rikkatech/swoole-httpserver/zipball/12ab7e8fe53a645b709270103c3d04feb1e6b683",
+                "reference": "12ab7e8fe53a645b709270103c3d04feb1e6b683",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "nikic/fast-route": "^1.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "RikkaTech\\SwooleHttp\\": "src/RikkaTech/SwooleHttp"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "lixworth",
+                    "email": "lixworth@gmail.com"
+                }
+            ],
+            "description": "Swoole Http Server",
+            "support": {
+                "issues": "https://github.com/rikkatech/swoole-httpserver/issues",
+                "source": "https://github.com/rikkatech/swoole-httpserver/tree/v0.1-alpha"
+            },
+            "time": "2021-08-30T22:43:09+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -4608,7 +4699,9 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "rikkatech/swoole-httpserver": 15
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

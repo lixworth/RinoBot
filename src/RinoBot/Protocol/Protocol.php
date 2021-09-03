@@ -10,13 +10,13 @@
 
 declare(strict_types=1);
 
-namespace RinoBot\protocol;
+namespace RinoBot\Protocol;
 
-use RinoBot\protocol\network\NetWork;
+use RinoBot\Protocol\Network\NetWork;
 
 /**
  * Interface Protocol
- * @package RinoBot\protocol
+ * @package RinoBot\Protocol
  *
  * 协议
  */

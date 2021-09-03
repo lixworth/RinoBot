@@ -9,7 +9,7 @@
  */
 declare(strict_types=1);
 
-namespace RinoBot\plugin;
+namespace RinoBot\Plugin;
 
 
 abstract class PluginBase

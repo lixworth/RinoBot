@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace ExamplePlugin;
 
-use RinoBot\plugin\PluginBase;
+use RinoBot\Plugin\PluginBase;
 
 class PluginMain extends PluginBase
 {

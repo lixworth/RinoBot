@@ -2,7 +2,7 @@
 
 /**
  * Class Curl
- * @package RinoBot\utils
+ * @package RinoBot\Utils
  */
 class Curl
 {

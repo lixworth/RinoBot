@@ -10,7 +10,7 @@
 
 declare(strict_types=1);
 
-namespace RinoBot\panel;
+namespace RinoBot\Panel;
 
 class View
 {

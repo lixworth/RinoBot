@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace RinoBot\utils;
+namespace RinoBot\Utils;
 
 use Exception;
 
 /**
  * Class Curl
- * @package RinoBot\utils
+ * @package RinoBot\Utils
  */
 class Curl
 {

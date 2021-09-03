@@ -8,14 +8,12 @@
  * @create 2021/8/26 21:32
  */
 
-namespace RinoBot\controller;
-
-use Swoole\Http\Response;
+namespace RinoBot\Controller;
 
 class ApiController extends AbstractController
 {
-    public function index(Response $response)
+    public function index()
     {
-        return $response->end(json_encode($this->request->all()));
+        return $this->response->end(json_encode($this->request->all()));
     }
 }

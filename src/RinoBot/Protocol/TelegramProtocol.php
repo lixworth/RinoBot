@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace RinoBot\protocol;
+namespace RinoBot\Protocol;
 
-use RinoBot\protocol\network\NetWork;
-use RinoBot\protocol\network\TelegramNetWork;
+use RinoBot\Protocol\Network\NetWork;
+use RinoBot\Protocol\Network\TelegramNetWork;
 
-class TelegramProtocol implements \RinoBot\protocol\Protocol
+class TelegramProtocol implements \RinoBot\Protocol\Protocol
 {
     public TelegramNetWork $telegramNetWork;
 

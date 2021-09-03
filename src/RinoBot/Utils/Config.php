@@ -10,13 +10,13 @@
 
 declare(strict_types=1);
 
-namespace RinoBot\utils;
+namespace RinoBot\Utils;
 
 use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class Config
- * @package RinoBot\utils
+ * @package RinoBot\Utils
  * 配置管理 yaml
  *
  * 使用 symfony 处理 YAML 文件

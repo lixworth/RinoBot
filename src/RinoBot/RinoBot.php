@@ -13,16 +13,14 @@ declare(strict_types=1);
 namespace RinoBot;
 
 use Composer\Autoload\ClassLoader;
-use RinoBot\http\HttpServer;
-use RinoBot\http\SwooleRouter;
-use RinoBot\plugin\PluginLoader;
-use RinoBot\protocol\MiraiBotProtocol;
-use RinoBot\protocol\network\MiraiBotNetWork;
-use RinoBot\utils\Config;
-use RinoBot\utils\Logger;
-use RinoBot\utils\Runtime;
-use Swoole\Http\Server;
+use FastRoute\RouteCollector;
+use RikkaTech\SwooleHttp\HttpServer;
+use RinoBot\Plugin\PluginLoader;
+use RinoBot\Utils\Config;
+use RinoBot\Utils\Logger;
+use RinoBot\Utils\Runtime;
 use Swoole\Process;
+use function FastRoute\simpleDispatcher;
 
 /**
  * Class RinoBot
@@ -44,6 +42,7 @@ class RinoBot
     private Logger $logger;
     private \stdClass $process;
     private \stdClass $http_server;
+
     /**
      * RinoBot constructor.
      * @param $config_dir
@@ -119,7 +118,7 @@ class RinoBot
 
         }
 
-        if($this->redis){
+        if ($this->redis) {
             $this->logger->success("Redis Provide is enabled,connect to tcp://127.0.0.1:6379");
         }
 
@@ -146,17 +145,17 @@ class RinoBot
         $this->loader->register();//composer init
 
         $plugins_list = null;
-        foreach ($this->pluginLoader->getPlugins() as $key=>$item){
-            if($plugins_list === null){
+        foreach ($this->pluginLoader->getPlugins() as $key => $item) {
+            if ($plugins_list === null) {
                 $plugins_list = $key;
-            }else{
-                $plugins_list = $plugins_list.",".$key;
+            } else {
+                $plugins_list = $plugins_list . "," . $key;
             }
         }
         $this->logger->success("Plugins is loaded successfully ($plugins_list)");
 
 
-//        print_r($this->pluginLoader->getPlugins());
+        $this->logger->debug("Plugins: ". json_encode($this->pluginLoader->getPlugins()));
         unset($config_dir);
         unset($plugin_dir);
         unset($runtime_dir);
@@ -167,45 +166,60 @@ class RinoBot
 //            "qq" => 1
 //        ]);
 
-        SwooleRouter::get("/","RinoBot\\controller\\ApiController@index","panel");
-
 
         $this->process = new \stdClass();
         $this->http_server = new \stdClass();
 
-        $this->process->webhook = new Process(function (){
-            $this->http_server->webhook = new HttpServer("panel","127.0.0.1",9501);
-        });
+        $this->startProcess();
 
-        $this->process->panel = new Process(function (){
-            $this->http_server->panel = new HttpServer("panel","127.0.0.1",9502);
-        });
-
-        $this->logger->success("Congratulations! RinoBot Console mode started successfully! (".Runtime::end().")");
+        $this->logger->success("Congratulations! RinoBot Console mode started successfully! (" . Runtime::end() . ")");
         $this->logger->info("=================================================================");
 
-        $this->process->webhook->start();
-        $this->process->panel->start();
-        if(START_TYPE === "cli"){
-            while (true){
+        if (START_TYPE === "cli") {
+            while (true) {
                 $msg = trim(fgets(STDIN));
-                switch ($msg){
+                switch ($msg) {
                     case "stop":
-//                        $this->http_server->panel->getHttp()->close();
-//                        $this->process->webhook->close();
-//                        $this->process->panel->close();
+                        Process::kill($this->process->panel->pid);
+                        Process::kill($this->process->webhook->pid);
+                        Process::wait(true);
                         $this->logger->info("RinoBot 已关闭");
-                        return;
+//                        return;
+                        break;
+                    case "start":
+                        $this->startProcess();
+                        $this->logger->info("RinoBot 已启动");
                         break;
                     default:
                         $this->logger->info("未知指令");
                         break;
                 }
             }
-        }else{
+        } else {
             $this->logger->info("RinoBot 已启动成功 启动进程退出");
         }
 
+    }
+    public function startProcess()
+    {
+
+        $this->process->panel = new Process(function () {
+            $dispatcher = simpleDispatcher(function(RouteCollector $routeCollector) {
+                $routeCollector->addRoute('GET', '/', '\RinoBot\Controller\ApiController@index');
+            });
+            $this->http_server->panel = new HttpServer("default","127.0.0.1",9501,$config = ['enable_coroutine' => true],true,$dispatcher,$this);
+        });
+
+        $this->process->webhook = new Process(function (Process $process) {
+            $dispatcher = simpleDispatcher(function(RouteCollector $routeCollector) {
+                $routeCollector->addRoute('GET', '/', '\RinoBot\Controller\ApiController@index');
+            });
+            $this->http_server->webhook = new HttpServer("default","127.0.0.1",9502,$config = ['enable_coroutine' => true],true,$dispatcher,$this);
+        });
+
+
+        $this->process->webhook->start();
+        $this->process->panel->start();
     }
 
     /**
@@ -240,7 +254,7 @@ class RinoBot
     public function check_php_ext(int $level = 1)
     {
         $error = [];
-        if(!version_compare(phpversion(),"7.4",">=")){
+        if (!version_compare(phpversion(), "7.4", ">=")) {
             $error[] = "PHP Version must >= 7.4";
         }
         if ($level > 1) {

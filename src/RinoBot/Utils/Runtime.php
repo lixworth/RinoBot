@@ -8,7 +8,7 @@
  * @create 2021/8/25 22:14
  */
 
-namespace RinoBot\utils;
+namespace RinoBot\Utils;
 
 class Runtime
 {

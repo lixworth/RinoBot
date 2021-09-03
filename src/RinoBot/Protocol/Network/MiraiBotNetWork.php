@@ -10,10 +10,10 @@
 
 declare(strict_types=1);
 
-namespace RinoBot\protocol\network;
+namespace RinoBot\Protocol\Network;
 
 
-use RinoBot\utils\Curl;
+use RinoBot\Utils\Curl;
 
 class MiraiBotNetWork
 {

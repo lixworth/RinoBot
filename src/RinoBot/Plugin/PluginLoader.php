@@ -14,6 +14,7 @@ namespace RinoBot\Plugin;
 
 
 use Composer\Autoload\ClassLoader;
+use RinoBot\RinoBot;
 use RinoBot\Singleton;
 use RinoBot\Utils\Config;
 use RinoBot\Utils\Logger;
@@ -55,7 +56,6 @@ class PluginLoader extends Singleton
             closedir($pd);
         }
 
-
         foreach ($plugin_list as $key => $plugin) {
             if ($this->verifyPlugin($plugin_directory, $plugin)) {
                 $this->registerPlugin($plugin_directory, $plugin);
@@ -79,13 +79,13 @@ class PluginLoader extends Singleton
     public function verifyPlugin(string $plugin_directory, string $plugin): bool
     {
         if (!is_dir($plugin_directory . $plugin . "/")) {
-            Logger::getInstance()->error("插件 $plugin 加载失败：文件夹不存在");
+            RinoBot::getInstance()->getLogger()->error("插件 $plugin 加载失败：文件夹不存在");
             return false;
         }
         if (!Config::checkConfigStructure($plugin_directory . $plugin . "/Plugin.yml", [
             "name", "main", "author", "version", "api-version"
         ])) {
-            Logger::getInstance()->error("插件 $plugin 加载失败：Plugin.yml 结构不符合");
+            RinoBot::getInstance()->getLogger()->error("插件 $plugin 加载失败：Plugin.yml 结构不符合");
             return false;
         }
         return true;

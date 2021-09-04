@@ -48,7 +48,7 @@ class Config
      * @param array $config
      * @return bool
      */
-    public static function generateFile(string $file, array $config)
+    public static function generateFile(string $file, array $config): bool
     {
         if (file_exists($file)) {
             return false;
@@ -95,5 +95,15 @@ class Config
             }
         }
         return true;
+    }
+
+    public static function checkConfigExists($config): bool
+    {
+        return file_exists($config);
+    }
+
+    public static function checkConfigWrite($config): bool
+    {
+       return self::checkConfigExists($config) && is_writable($config);
     }
 }

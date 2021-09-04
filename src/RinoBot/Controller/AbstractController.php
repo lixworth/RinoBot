@@ -11,9 +11,18 @@
 namespace RinoBot\Controller;
 
 
+use Swoole\Http\Request;
+use Swoole\Http\Response;
+
 abstract class AbstractController
 {
+    /**
+     * @var Request
+     */
     public $request;
+    /**
+     * @var Response
+     */
     public $response;
 
     public function __construct($request,$response)

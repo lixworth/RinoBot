@@ -43,6 +43,8 @@ class RinoBot
     private \stdClass $process;
     private \stdClass $http_server;
 
+    private bool $enable_installer = false;
+
     /**
      * RinoBot constructor.
      * @param $config_dir
@@ -74,24 +76,29 @@ class RinoBot
             }
         }
         $this->logger->info("RinoBot Start Booting form config");
+
         // 校验RinoBot运行配置
-        if ($this->config = Config::parseFile($config_dir . "rino-bot.yaml")) {
-            if (!Config::checkConfigStructure($config_dir . "rino-bot.yaml", ["debug", "bots" => []])) {
-                exit("rino-bot.yaml 配置文件错误 请对比实例或请删除再次运行程序重新生成");
-            }
-        } else {
-            if (!Config::generateFile($config_dir . "rino-bot.yaml", [
-                "debug" => true,
-                "bots" => [
-                    [
-                        "bot_name" => "Rumao",
-                        "bot_id" => "233",
-                        "bot_key" => "233"
-                    ]
-                ] //todo bot structure
-            ])) {
-                exit("rino-bot.yaml 生成错误 原因: 未知");
-            }
+//        if ($this->config = Config::parseFile($config_dir . "rino-bot.yaml")) {
+//            if (!Config::checkConfigStructure($config_dir . "rino-bot.yaml", ["debug", "bots" => []])) {
+//                exit("rino-bot.yaml 配置文件错误 请对比实例或请删除再次运行程序重新生成");
+//            }
+//        } else {
+//            if (!Config::generateFile($config_dir . "rino-bot.yaml", [
+//                "debug" => true,
+//                "bots" => [
+//                    [
+//                        "bot_name" => "Rumao",
+//                        "bot_id" => "233",
+//                        "bot_key" => "233"
+//                    ]
+//                ] //todo bot structure
+//            ])) {
+//                exit("rino-bot.yaml 生成错误 原因: 未知");
+//            }
+//        }
+
+        if(!Config::checkConfigExists($config_dir . "rino-bot.yaml")){
+            $this->enable_installer = true;
         }
 
         // 注册redis
@@ -128,6 +135,7 @@ class RinoBot
         $this->plugin_dir = $plugin_dir;
         $this->runtime_dir = $runtime_dir;
         $this->plugins = [];
+
         // 校验目录
         foreach ([$config_dir, $plugin_dir, $runtime_dir] as $item) {
             if (!is_dir($item)) {
@@ -140,22 +148,14 @@ class RinoBot
             }
         }
 
-        $this->pluginLoader = new PluginLoader($this->loader);
+/*        $this->pluginLoader = new PluginLoader($this->loader);
         $this->pluginLoader->loadPlugins($plugin_dir); // 插件自动加载
-        $this->loader->register();//composer init
-
-        $plugins_list = null;
-        foreach ($this->pluginLoader->getPlugins() as $key => $item) {
-            if ($plugins_list === null) {
-                $plugins_list = $key;
-            } else {
-                $plugins_list = $plugins_list . "," . $key;
-            }
-        }
-        $this->logger->success("Plugins is loaded successfully ($plugins_list)");
+        $this->loader->register();//composer init*/
 
 
-        $this->logger->debug("Plugins: ". json_encode($this->pluginLoader->getPlugins()));
+//        $this->logger->success("Plugins is loaded successfully (".$this->getPluginsList().")");
+
+//        $this->logger->debug("Plugins: ". json_encode($this->pluginLoader->getPlugins()));
         unset($config_dir);
         unset($plugin_dir);
         unset($runtime_dir);
@@ -180,9 +180,7 @@ class RinoBot
                 $msg = trim(fgets(STDIN));
                 switch ($msg) {
                     case "stop":
-                        Process::kill($this->process->panel->pid);
-                        Process::kill($this->process->webhook->pid);
-                        Process::wait(true);
+                        $this->stopProcess();
                         $this->logger->info("RinoBot 已关闭");
 //                        return;
                         break;
@@ -190,6 +188,10 @@ class RinoBot
                         $this->startProcess();
                         $this->logger->info("RinoBot 已启动");
                         break;
+                    case "reload":
+                        $this->stopProcess();
+                        $this->startProcess();
+                        $this->logger->info("RinoBot 重启成功");
                     default:
                         $this->logger->info("未知指令");
                         break;
@@ -200,12 +202,18 @@ class RinoBot
         }
 
     }
+
     public function startProcess()
     {
-
         $this->process->panel = new Process(function () {
             $dispatcher = simpleDispatcher(function(RouteCollector $routeCollector) {
-                $routeCollector->addRoute('GET', '/', '\RinoBot\Controller\ApiController@index');
+                if($this->enable_installer){
+                    $routeCollector->addGroup('/install',function (RouteCollector $routeCollector){
+                        $routeCollector->addRoute('GET', '/demo2', '\RinoBot\Controller\ApiController@index');
+                    });
+                }else{
+                    $routeCollector->addRoute('GET', '/', '\RinoBot\Controller\ApiController@index');
+                }
             });
             $this->http_server->panel = new HttpServer("default","127.0.0.1",9501,$config = ['enable_coroutine' => true],true,$dispatcher,$this);
         });
@@ -222,6 +230,12 @@ class RinoBot
         $this->process->panel->start();
     }
 
+    public function stopProcess()
+    {
+        Process::kill($this->process->panel->pid);
+        Process::kill($this->process->webhook->pid);
+        Process::wait(true);
+    }
     /**
      * @return RinoBot
      */
@@ -274,5 +288,19 @@ class RinoBot
 //            $error[] = "请安装 YAML 扩展";
 //        }
         return (count($error) == 0) ? true : $error;
+    }
+
+    public function getPluginsList() : string
+    {
+        $plugins_list = null;
+        foreach ($this->pluginLoader->getPlugins() as $key => $item) {
+            if ($plugins_list === null) {
+                $plugins_list = $key;
+            } else {
+                $plugins_list = $plugins_list . "," . $key;
+            }
+        }
+
+        return $plugins_list;
     }
 }

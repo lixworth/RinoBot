@@ -17,7 +17,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use RinoBot\Utils\Curl;
 
-class MiraiBotNetWork
+class MiraiBotNetWork extends NetWork
 {
 //    private string $api;
     private Client $client;

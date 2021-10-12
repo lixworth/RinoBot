@@ -6,7 +6,7 @@ namespace RinoBot\Protocol;
 use RinoBot\Protocol\Network\NetWork;
 use RinoBot\Protocol\Network\TelegramNetWork;
 
-class TelegramProtocolInterface implements \RinoBot\Protocol\ProtocolInterface
+class TelegramProtocol extends Protocol implements \RinoBot\Protocol\ProtocolInterface
 {
     public TelegramNetWork $telegramNetWork;
 

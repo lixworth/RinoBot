@@ -201,6 +201,7 @@ class TelegramNetWork extends NetWork
      * @param bool|false $disable_notification (可选)静默发送消息，用户将收到无声通知
      * @param string|null $reply_to_message_id (可选)回复消息ID，不是回复消息留空
      * @param bool|true $allow_sending_without_reply (可选)如果需要被回复的消息不存在是否发送
+     * @return bool|string
      */
     public function sendVideo(
         string $Token, string $ChatID,string $video,

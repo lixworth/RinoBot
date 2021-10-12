@@ -16,7 +16,7 @@ namespace RinoBot\Protocol;
 use RinoBot\Protocol\Network\MiraiBotNetWork;
 use RinoBot\RinoBot;
 
-class MiraiBotProtocolInterface implements ProtocolInterface
+class MiraiBotProtocol extends Protocol implements ProtocolInterface
 {
     public MiraiBotNetWork $miraiBotNetWork;
     public bool $connect = false;

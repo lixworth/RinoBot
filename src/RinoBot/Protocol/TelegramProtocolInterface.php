@@ -6,7 +6,7 @@ namespace RinoBot\Protocol;
 use RinoBot\Protocol\Network\NetWork;
 use RinoBot\Protocol\Network\TelegramNetWork;
 
-class TelegramProtocol implements \RinoBot\Protocol\Protocol
+class TelegramProtocolInterface implements \RinoBot\Protocol\ProtocolInterface
 {
     public TelegramNetWork $telegramNetWork;
 
@@ -34,5 +34,16 @@ class TelegramProtocol implements \RinoBot\Protocol\Protocol
     public function setBotInfo(): void
     {
         // TODO: Implement setBotInfo() method.
+    }
+
+
+    public function getProtocolId(): int
+    {
+       return Protocol::Telegram;
+    }
+
+    public function getProtocolName(): string
+    {
+        return "Telegram Bot";
     }
 }

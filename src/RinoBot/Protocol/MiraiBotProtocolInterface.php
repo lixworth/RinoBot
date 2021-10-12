@@ -15,9 +15,8 @@ namespace RinoBot\Protocol;
 
 use RinoBot\Protocol\Network\MiraiBotNetWork;
 use RinoBot\RinoBot;
-use RinoBot\Utils\Logger;
 
-class MiraiBotProtocol implements Protocol
+class MiraiBotProtocolInterface implements ProtocolInterface
 {
     public MiraiBotNetWork $miraiBotNetWork;
     public bool $connect = false;
@@ -81,4 +80,15 @@ class MiraiBotProtocol implements Protocol
         $this->connect = false;
         RinoBot::getInstance()->getLogger()->info("MirBot load failed $message");
     }
+
+    public function getProtocolId(): int
+    {
+        return Protocol::MiraiBot;
+    }
+
+    public function getProtocolName() : string
+    {
+        return "Mirai QQ Bot";
+    }
+
 }

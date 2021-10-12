@@ -14,7 +14,8 @@
     "ext-curl": "*",
     "symfony/http-foundation": "^5.3",
     "laravel/framework": "^8.56",
-    "rikkatech/swoole-httpserver": "v0.1-alpha"
+    "rikkatech/swoole-httpserver": "v0.1-alpha",
+    "guzzlehttp/guzzle": "^7.0"
   },
   "autoload": {
     "psr-4": {

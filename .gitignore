@@ -5,3 +5,4 @@ runtime/*./log
 /tools/build/*
 runtime/
 config/
+tests/private/*

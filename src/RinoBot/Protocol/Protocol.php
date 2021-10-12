@@ -5,28 +5,15 @@
  * @project RinoBot
  * @author lixworth <lixworth@outlook.com>
  * @copyright RinoBot
- * @create 2021/8/2 18:48
+ * @create 2021/9/4 9:35
  */
-
-declare(strict_types=1);
 
 namespace RinoBot\Protocol;
 
-use RinoBot\Protocol\Network\NetWork;
-
-/**
- * Interface Protocol
- * @package RinoBot\Protocol
- *
- * 协议
- */
-interface Protocol
+class Protocol
 {
-    public function __construct($data);
-
-    public function connect(): void;
-
-    public function getNetWork();
-
-    public function setBotInfo(): void;
+    const Telegram = 0;
+    const MiraiBot = 1;
+    const Discord = 2;
+    const XiaoLZ = 3;
 }
